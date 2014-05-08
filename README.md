@@ -7,7 +7,7 @@ The general SDK for Emotion tuning's car search API.
 - supports all _modern_ browsers + IE9 and newer
 
 ## DEMO
-[https://www.emotion-tuning.com/SDK/index.htm](Click here to open a demo)
+[Click here to open a demo](https://www.emotion-tuning.com/SDK/index.htm)
 
 ### How to use
 - Check requirements. Does your server support _PHP_? 
