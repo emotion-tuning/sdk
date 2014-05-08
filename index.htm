@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Emotion Tuning Javascript SDK example</title>
+    <link rel="stylesheet" href="_assets/css/emotion-microsite.min.css" media="all">
+    <!-- emotion dependencies start -->
+    <link rel="stylesheet" href="_assets/css/emotion-base.css" media="all">
+    <link rel="stylesheet" href="_assets/css/emotion-style.css" media="screen">
+    <script type="text/javascript" src="js/emotionApi.min.js"></script>
+    <!-- emotion dependencies end -->
+  </head>
+  <body>
+    <div class="container">
+      <!-- emotion widget start -->
+      <div class="etWidget">
+        <form action="#" id="etWidget_form" method="post" enctype="multipart/form-data">
+          <!--[if lt IE 8]>
+          Your browser is not supported. Please upgrade.
+          <input type="hidden" id="etWidget_obsoleteBrowser" value="1">
+          <![endif]-->
+          <label for="etWidget_make">Make:</label>
+          <select id="etWidget_make" required disabled name="make"><option value="">- Loading -</option></select>
+          <label for="etWidget_model">Model:</label>
+          <select id="etWidget_model" required disabled name="model"><option value="">- Loading -</option></select>
+          <label for="etWidget_fuel">Fuel:</label>
+          <select id="etWidget_fuel" required disabled name="fuel"><option value="">- Loading -</option></select>
+          <label for="etWidget_variant">Variant:</label>
+          <select id="etWidget_variant" required disabled name="variantId"><option value="">- Loading -</option></select>
+          <input type="submit" value="Search">
+        </form>
+      </div>
+      <!-- emotion widget end -->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+/* CSS Document */
+.etWidget select, .etWidget label {
+	display:block;
+	width:100%;
+}
+.etWidget label {
+	margin-bottom:5px;
+}
+.etWidget select {
+	margin-bottom:10px;
+}

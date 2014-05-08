@@ -79,4 +79,23 @@
 	  }
 	}
   }
+  
+  class emotionEpiHelpers
+  {
+	public static function sanitize($f_Input)
+	{
+	  $l_output = '';
+	  $l_allowedCharacters = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '-', '_', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
+	  for($l_i = 0, $l_max = strlen($f_Input); $l_i < $l_max; $l_i++)
+	  {
+		if(in_array(strtolower(substr($f_Input, $l_i, 1)), $l_allowedCharacters))
+		{
+		  $l_output .= substr($f_Input, $l_i, 1);
+	    }
+	  }
+	  unset($l_allowedCharacters);
+		
+	  return $l_output;
+	}
+  }
 ?>

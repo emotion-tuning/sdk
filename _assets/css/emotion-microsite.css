@@ -1,0 +1,14 @@
+/* CSS Document */
+body {
+	margin:0px;
+	padding:0px;
+	font-family:Arial;
+	font-size:1em;
+	background-color:#efefef;
+}
+.container {
+	width:500px;
+	margin:300px auto 0px auto;
+	padding:30px;
+	background-color:#fff;
+}
