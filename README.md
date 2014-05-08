@@ -24,6 +24,7 @@ The general SDK for Emotion tuning's car search API.
 3. Paste it to the desired place in your HTML
 4. Replace 
    > INSERT_EMOTION_API_KEY_HERE
+   
    with an actual key and save the file
    
 5. Copy lines between
@@ -38,7 +39,7 @@ The general SDK for Emotion tuning's car search API.
    <!-- emotion dependencies end -->
    ```
    
-6. Paste them in your HTML just before the closing the &lt;/html&gt; tag.
+6. Paste them in your HTML just before the closing the *&lt;/html&gt;* tag.
 7. Update and check your site.
 
 ## PHP
