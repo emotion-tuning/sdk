@@ -205,7 +205,7 @@ function emotionApi()
     for(l_i in f_Response.Items)
     {
       l_Option = document.createElement('option');
-      l_Option.value = f_Response[l_i].Value;
+      l_Option.value = f_Response.Items[l_i].Value;
       l_Option.innerHTML = f_Response.Items[l_i].Text;
       f_Dropdown.appendChild(l_Option);
     }
