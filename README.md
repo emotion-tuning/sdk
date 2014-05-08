@@ -1,7 +1,7 @@
 Emotion Tuning SDK
 ==================
 The general SDK for Emotion tuning's car search API. 
-> Requires a valid API key - to obtain one, please contact us through our website, [https://www.emotion-tuning.com]
+> Requires a valid API key - to obtain one, please contact us through our [website](https://www.emotion-tuning.com)
 
 ## jQuery
 - latest jQuery compatible
@@ -52,5 +52,5 @@ The general SDK for Emotion tuning's car search API.
    > INSERT_EMOTION_API_KEY_HERE
    
    with an actual key and save the file
-4. Upload it to your PHP server and enter the new url, e.g. [http://localhost/emotion/PHP/exmaple.php] with your browser.
+4. Upload it to your PHP server and enter the new url, e.g. http://localhost/emotion/PHP/exmaple.php with your browser.
 5. Now you can copy, paste and adjust the example code in your own project.
