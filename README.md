@@ -39,7 +39,7 @@ The general SDK for Emotion tuning's car search API.
    <!-- emotion dependencies end -->
    ```
    
-6. Paste them in your HTML just before the closing </html> tag.
+6. Paste them in your HTML just before the closing the ```HTML</html>``` tag.
 7. Update and check your site.
 
 ## PHP
