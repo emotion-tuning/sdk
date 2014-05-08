@@ -19,93 +19,83 @@ var i_emotionApi;
  
 function emotionApi()
 {
-  this.m_LastMethod = null;
-  this.m_MakeDropdown = null;
-  this.m_ModelDropdown = null;
-  this.m_VariantDropdown = null;
-  this.m_FuelDropdown = null;
+  this.m_DD_Make = null;
+  this.m_DD_Model = null;
+  this.m_DD_Variant = null;
+  this.m_DD_Fuel = null;
   
-  this.attachAfterLoad = function() 
+  this.init = function() 
   {
     var proceed = true;
-    if(document.getElementById('etWidget_obsoleteBrowser') != null && document.getElementById('etWidget_obsoleteBrowser').value == '1')
+    if(document.getElementById('etObsolete') != null)
     {
       proceed = false;
     }
     if (proceed)
     {
-      window.addEventListener('load', this._OnDocumentLoad, false);
+      window.addEventListener('load', this._OnDocLoad, false);
     }
   }
   
-  this.execute = function(f_Method, f_Callback, f_Dropdown, f_Data)
+  this.exe = function(f_Method, f_Callback, f_Dropdown, f_Data)
   {
     var l_xhr = null;
-    var thisObj = this;
+    var l_owner = this;
     var l_Data = {et_method:null};
     
-    if(typeof(f_Method) != 'undefined')
+    if(typeof(f_Data) != 'undefined')
     {
-      this.m_LastMethod = f_Method;
+      l_Data = f_Data;
     }
-    if(this.m_LastMethod != null)
-    {
-      if(typeof(f_Data) != 'undefined')
+    l_Data.et_method = this.m_LastMethod;
+     
+    f_Dropdown.setAttribute('disabled', true);
+    l_xhr = new XMLHttpRequest();
+    l_xhr.onreadystatechange = function() {
+      if(l_xhr.readyState != 4) return;
+      if(l_xhr.status != 200 && l_xhr.status != 304)
       {
-        l_Data = f_Data;
+        l_owner.msg('Unexpected server reply (' + l_xhr.status + ')');
+        return;
       }
-      l_Data.et_method = this.m_LastMethod;
-      
-      f_Dropdown.setAttribute('disabled', true);
-      l_xhr = new XMLHttpRequest();
-      l_xhr.onreadystatechange = function() {
-        if(l_xhr.readyState != 4) return;
-        if(l_xhr.status != 200 && l_xhr.status != 304)
-        {
-          thisObj.msg('Unexpected server reply (' + l_xhr.status + ')');
-          return;
-        }
-		l_Response = JSON.parse(l_xhr.responseText);
-		if(l_Response.Success)
-		{
-          f_Callback(l_Response, f_Dropdown);
-          f_Dropdown.removeAttribute('disabled');
-		} else {
-		  l_Error = document.createElement('p');
-		  l_Error.innerHTML = l_Response.ErrorMessage;
-		  l_Error.className = 'etError';
-		  f_Dropdown.parentNode.appendChild(l_Error);
-		}
-      }
-      l_xhr.open('POST', 'PHP/json.tunnel.php', true);
-      l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-      l_xhr.send(this._stringify(l_Data));
-    } else {
-      this.msg('No method to execute has been specified!');
+	  l_Response = JSON.parse(l_xhr.responseText);
+	  if(l_Response.Success)
+	  {
+        f_Callback(l_Response, f_Dropdown);
+        f_Dropdown.removeAttribute('disabled');
+	  } else {
+		l_Error = document.createElement('p');
+	    l_Error.innerHTML = l_Response.ErrorMessage;
+	    l_Error.className = 'etError';
+		f_Dropdown.parentNode.appendChild(l_Error);
+	  }
     }
+    l_xhr.open('POST', 'PHP/json.tunnel.php', true);
+    l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    l_xhr.send(this._stringify(l_Data));
   }
   
-  this._OnDocumentLoad = function(f_Event)
+  this._OnDocLoad = function(f_Event)
   {
     i_emotionApi._init();
   }
   
   this._init = function()
   {
-    this.m_MakeDropdown = document.getElementById('etWidget_make');
-    this.m_ModelDropdown = document.getElementById('etWidget_model');
-    this.m_FuelDropdown = document.getElementById('etWidget_fuel');
-    this.m_VariantDropdown = document.getElementById('etWidget_variant');
+    this.m_DD_Make = document.getElementById('etWidget_make');
+    this.m_DD_Model = document.getElementById('etWidget_model');
+    this.m_DD_Fuel = document.getElementById('etWidget_fuel');
+    this.m_DD_Variant = document.getElementById('etWidget_variant');
     
-    this.m_MakeDropdown.addEventListener('change', this._EventDispatcher, false);
-    this.m_ModelDropdown.addEventListener('change', this._EventDispatcher, false);
-    this.m_FuelDropdown.addEventListener('change', this._EventDispatcher, false);
-    this.m_VariantDropdown.addEventListener('change', this._EventDispatcher, false);
+    this.m_DD_Make.addEventListener('change', this._EvtDisp, false);
+    this.m_DD_Model.addEventListener('change', this._EvtDisp, false);
+    this.m_DD_Fuel.addEventListener('change', this._EvtDisp, false);
+    this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
     
-	this.m_MakeDropdown.childNodes[0].innerHTML = '- Please select -';
-	this.m_ModelDropdown.childNodes[0].innerHTML = '- Please select above -';
-	this.m_FuelDropdown.childNodes[0].innerHTML = '- Please select above -';
-	this.m_VariantDropdown.childNodes[0].innerHTML = '- Please select above -';
+	this.m_DD_Make.childNodes[0].innerHTML = '- Please select -';
+	this.m_DD_Model.childNodes[0].innerHTML = '- Please select above -';
+	this.m_DD_Fuel.childNodes[0].innerHTML = '- Please select above -';
+	this.m_DD_Variant.childNodes[0].innerHTML = '- Please select above -';
 	
     this.LoadMakes();
   }
@@ -122,22 +112,22 @@ function emotionApi()
   
   this.LoadMakes = function()
   {
-    this.execute('make', this._populateDropdown, this.m_MakeDropdown);
+    this.exe('make', this._fillDD, this.m_DD_Make);
   }
   
   this.LoadModels = function()
   {
-    this.execute('model', this._populateDropdown, this.m_ModelDropdown, {makeId: this.m_MakeDropdown.options[this.m_MakeDropdown.selectedIndex].value});
+    this.exe('model', this._fillDD, this.m_DD_Model, {makeId: this.m_DD_Make.options[this.m_DD_Make.selectedIndex].value});
   }
   
   this.LoadFuels = function()
   {
-    this.execute('fuel', this._populateDropdown, this.m_FuelDropdown, {modelId: this.m_ModelDropdown.options[this.m_ModelDropdown.selectedIndex].value});
+    this.exe('fuel', this._fillDD, this.m_DD_Fuel, {modelId: this.m_DD_Model.options[this.m_DD_Model.selectedIndex].value});
   }
   
   this.LoadVariants = function()
   {
-    this.execute('variant', this._populateDropdown, this.m_VariantDropdown, {modelId: this.m_ModelDropdown.options[this.m_ModelDropdown.selectedIndex].value, fuelId: this.m_FuelDropdown.options[this.m_FuelDropdown.selectedIndex].value});
+    this.exe('variant', this._fillDD, this.m_DD_Variant, {modelId: this.m_DD_Model.options[this.m_DD_Model.selectedIndex].value, fuelId: this.m_DD_Fuel.options[this.m_DD_Fuel.selectedIndex].value});
   }
   
   this.LoadOrderForm = function()
@@ -145,20 +135,20 @@ function emotionApi()
     this.msg('Not implemented');
   }
   
-  this.OnMakeChange = function(f_Event)
+  this.OnMakeChange = function()
   {
     this.LoadModels();
-	this.m_FuelDropdown.selectedIndex = 0;
-	this.m_FuelDropdown.setAttribute('disabled', true);
-	this.m_VariantDropdown.selectedIndex = 0;
-	this.m_VariantDropdown.setAttribute('disabled', true);
+	this.m_DD_Fuel.selectedIndex = 0;
+	this.m_DD_Fuel.setAttribute('disabled', true);
+	this.m_DD_Variant.selectedIndex = 0;
+	this.m_DD_Variant.setAttribute('disabled', true);
   }
   
   this.OnModelChange = function()
   {
     this.LoadFuels();
-	this.m_VariantDropdown.selectedIndex = 0;
-	this.m_VariantDropdown.setAttribute('disabled', true);
+	this.m_DD_Variant.selectedIndex = 0;
+	this.m_DD_Variant.setAttribute('disabled', true);
   }
   
   this.OnFuelChange = function()
@@ -171,21 +161,21 @@ function emotionApi()
     this.LoadOrderForm();
   }
   
-  this._EventDispatcher = function(f_Event)
+  this._EvtDisp = function(f_Event)
   {
-      if(f_Event.srcElement == i_emotionApi.m_MakeDropdown)
+      if(f_Event.srcElement == i_emotionApi.m_DD_Make)
       {
           i_emotionApi.OnMakeChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_ModelDropdown)
+      if(f_Event.srcElement == i_emotionApi.m_DD_Model)
       {
           i_emotionApi.OnModelChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_FuelDropdown)
+      if(f_Event.srcElement == i_emotionApi.m_DD_Fuel)
       {
           i_emotionApi.OnFuelChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_VariantDropdown)
+      if(f_Event.srcElement == i_emotionApi.m_DD_Variant)
       {
           i_emotionApi.OnVariantChange(f_Event);
       }
@@ -195,14 +185,13 @@ function emotionApi()
   {
     if(typeof(console.log) != 'undefined')
     {
-      console.log('Emotion Tuning Widget', f_Msg);
+      console.log('ET', f_Msg);
     } else {
-      f_Msg = 'Emotion Tuning Widget:' + f_Msg;
-      alert(f_Msg);
+      alert('ET:' + f_Msg);
     }
   }
   
-  this._populateDropdown = function(f_Response, f_Dropdown)
+  this._fillDD = function(f_Response, f_Dropdown)
   {
     var l_Option = null;
     while (f_Dropdown.firstChild)
@@ -220,4 +209,4 @@ function emotionApi()
 }
  
 i_emotionApi = new emotionApi;
-i_emotionApi.attachAfterLoad();
+i_emotionApi.init();
