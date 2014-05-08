@@ -6,6 +6,7 @@ The general SDK for Emotion tuning's car search API.
 ## jQuery
 - latest jQuery compatible
 - minified code for quick loading
+
 ### How to use
 1. Open index.htm in a code editor
 2. Copy lines between
@@ -17,11 +18,7 @@ and
 <!-- emotion widget end -->
 ```
 3. Paste it to the desired place in your HTML
-4. Replace 
-```
-INSERT_EMOTION_API_KEY_HERE
-```
-with an actual key and save the file
+4. Replace ```INSERT_EMOTION_API_KEY_HERE``` with an actual key and save the file
 5. Copy lines between
 ```HTML
 <!-- emotion dependencies start -->
@@ -35,6 +32,7 @@ and
 
 ## PHP
 - latest PHP _required_
+
 ### How to use
 1. Locate your API key. If you don't have any, please contact us through our website.
 2. Open /PHP/example.php in any code editor
