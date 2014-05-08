@@ -6,6 +6,9 @@ The general SDK for Emotion tuning's car search API.
 - requires latest _PHP_
 - supports all _modern_ browsers + IE9 and newer
 
+## DEMO
+[https://www.emotion-tuning.com/SDK/index.htm](Click here to open a demo)
+
 ### How to use
 - Check requirements. Does your server support _PHP_? 
   > If not, you need to have a "proxy" script (that mimicks **PHP/json.tunnel.php**) developed in your server's technology and update that script's url in **js/emotionApi.min.js**.
