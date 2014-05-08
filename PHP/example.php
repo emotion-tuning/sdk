@@ -8,7 +8,7 @@
   $i_emotionApi = new emotionApi;
   
   // Fetch example data
-  // NOTE: To see the complete list of available methods, check the JavaScript/jQuery implementation OR request it from us
+  // NOTE: To see the complete list of available methods, please contact us
   $etApiResponse = $i_emotionApi->execute('/Module/GetEmotionModels', array(
      'makeId' => 'a33fc266-a887-49c7-abfd-3fa37c8d6565'
   ));
