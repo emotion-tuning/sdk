@@ -65,8 +65,17 @@ function emotionApi()
           thisObj.msg('Unexpected server reply (' + l_xhr.status + ')');
           return;
         }
-        f_Callback(JSON.parse(l_xhr.responseText), f_Dropdown);
-        f_Dropdown.removeAttribute('disabled');
+		l_Response = JSON.parse(l_xhr.responseText);
+		if(l_Response.Success)
+		{
+          f_Callback(l_Response, f_Dropdown);
+          f_Dropdown.removeAttribute('disabled');
+		} else {
+		  l_Error = document.createElement('p');
+		  l_Error.innerHTML = l_Response.ErrorMessage;
+		  l_Error.className = 'etError';
+		  f_Dropdown.parentNode.appendChild(l_Error);
+		}
       }
       l_xhr.open('POST', 'PHP/json.tunnel.php', true);
       l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -193,11 +202,11 @@ function emotionApi()
     {
       f_Dropdown.removeChild(f_Dropdown.firstChild);
     }
-    for(l_i in f_Response)
+    for(l_i in f_Response.Items)
     {
       l_Option = document.createElement('option');
       l_Option.value = f_Response[l_i].Value;
-      l_Option.innerHTML = f_Response[l_i].Text;
+      l_Option.innerHTML = f_Response.Items[l_i].Text;
       f_Dropdown.appendChild(l_Option);
     }
   }

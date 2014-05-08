@@ -5,3 +5,8 @@
 	border-radius:5px;
 	padding:5px 10px;
 }
+.etError {
+	background-color:#cc0000;
+	color:#fff;
+	padding:5px 10px;
+}
