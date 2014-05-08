@@ -27,159 +27,159 @@ function emotionApi()
   
   this.attachAfterLoad = function() 
   {
-	var proceed = true;
-	if(document.getElementById('etWidget_obsoleteBrowser') != null && document.getElementById('etWidget_obsoleteBrowser').value == '1')
-	{
-	  proceed = false;
-	}
+    var proceed = true;
+    if(document.getElementById('etWidget_obsoleteBrowser') != null && document.getElementById('etWidget_obsoleteBrowser').value == '1')
+    {
+      proceed = false;
+    }
     if (proceed)
-	{
+    {
       window.addEventListener('load', this._OnDocumentLoad, false);
     }
   }
   
   this.execute = function(f_Method, f_Callback, f_Dropdown, f_Data)
   {
-	var l_xhr = null;
-	var thisObj = this;
-	var l_Data = {et_method:null};
-	
-	if(typeof(f_Method) != 'undefined')
-	{
-	  this.m_LastMethod = f_Method;
-	}
-	if(this.m_LastMethod != null)
-	{
-	  if(typeof(f_Data) != 'undefined')
-	  {
-		l_Data = f_Data;
-	  }
-	  l_Data.et_method = this.m_LastMethod;
-	  
-	  f_Dropdown.setAttribute('disabled', true);
-	  l_xhr = new XMLHttpRequest();
-	  l_xhr.onreadystatechange = function() {
-	    if(l_xhr.readyState != 4) return;
-		if(l_xhr.status != 200 && l_xhr.status != 304)
-		{
-		  thisObj.msg('Unexpected server reply (' + l_xhr.status + ')');
-		  return;
-		}
-		f_Callback(JSON.parse(l_xhr.responseText), f_Dropdown);
-	    f_Dropdown.removeAttribute('disabled');
-	  }
-	  l_xhr.open('POST', 'PHP/json.tunnel.php', true);
-	  l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-	  l_xhr.send(this._stringify(l_Data));
-	} else {
-	  this.msg('No method to execute has been specified!');
-	}
+    var l_xhr = null;
+    var thisObj = this;
+    var l_Data = {et_method:null};
+    
+    if(typeof(f_Method) != 'undefined')
+    {
+      this.m_LastMethod = f_Method;
+    }
+    if(this.m_LastMethod != null)
+    {
+      if(typeof(f_Data) != 'undefined')
+      {
+        l_Data = f_Data;
+      }
+      l_Data.et_method = this.m_LastMethod;
+      
+      f_Dropdown.setAttribute('disabled', true);
+      l_xhr = new XMLHttpRequest();
+      l_xhr.onreadystatechange = function() {
+        if(l_xhr.readyState != 4) return;
+        if(l_xhr.status != 200 && l_xhr.status != 304)
+        {
+          thisObj.msg('Unexpected server reply (' + l_xhr.status + ')');
+          return;
+        }
+        f_Callback(JSON.parse(l_xhr.responseText), f_Dropdown);
+        f_Dropdown.removeAttribute('disabled');
+      }
+      l_xhr.open('POST', 'PHP/json.tunnel.php', true);
+      l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+      l_xhr.send(this._stringify(l_Data));
+    } else {
+      this.msg('No method to execute has been specified!');
+    }
   }
   
   this._OnDocumentLoad = function(f_Event)
   {
-	i_emotionApi._init();
+    i_emotionApi._init();
   }
   
   this._init = function()
   {
-	this.m_MakeDropdown = document.getElementById('etWidget_make');
-	this.m_ModelDropdown = document.getElementById('etWidget_model');
-	this.m_FuelDropdown = document.getElementById('etWidget_fuel');
-	this.m_VariantDropdown = document.getElementById('etWidget_variant');
-	
-	this.m_MakeDropdown.addEventListener('change', this._EventDispatcher, false);
-	this.m_ModelDropdown.addEventListener('change', this._EventDispatcher, false);
-	this.m_FuelDropdown.addEventListener('change', this._EventDispatcher, false);
-	this.m_VariantDropdown.addEventListener('change', this._EventDispatcher, false);
-	
-	this.LoadMakes();
+    this.m_MakeDropdown = document.getElementById('etWidget_make');
+    this.m_ModelDropdown = document.getElementById('etWidget_model');
+    this.m_FuelDropdown = document.getElementById('etWidget_fuel');
+    this.m_VariantDropdown = document.getElementById('etWidget_variant');
+    
+    this.m_MakeDropdown.addEventListener('change', this._EventDispatcher, false);
+    this.m_ModelDropdown.addEventListener('change', this._EventDispatcher, false);
+    this.m_FuelDropdown.addEventListener('change', this._EventDispatcher, false);
+    this.m_VariantDropdown.addEventListener('change', this._EventDispatcher, false);
+    
+    this.LoadMakes();
   }
   
   this._stringify = function(f_Object)
   {
-	var l_Params = '';
-	for(key in f_Object)
-	{
-	  l_Params += key + '=' + f_Object[key] + '&';
-	}
-	return l_Params.substr(0, l_Params.length - 1);
+    var l_Params = '';
+    for(key in f_Object)
+    {
+      l_Params += key + '=' + f_Object[key] + '&';
+    }
+    return l_Params.substr(0, l_Params.length - 1);
   }
   
   this.LoadMakes = function()
   {
-	this.execute('make', this._populateDropdown, this.m_MakeDropdown);
+    this.execute('make', this._populateDropdown, this.m_MakeDropdown);
   }
   
   this.LoadModels = function()
   {
-	this.execute('model', this._populateDropdown, this.m_ModelDropdown, {makeId: this.m_MakeDropdown.options[this.m_MakeDropdown.selectedIndex].value});
+    this.execute('model', this._populateDropdown, this.m_ModelDropdown, {makeId: this.m_MakeDropdown.options[this.m_MakeDropdown.selectedIndex].value});
   }
   
   this.LoadFuels = function()
   {
-	this.execute('fuel', this._populateDropdown, this.m_FuelDropdown, {modelId: this.m_ModelDropdown.options[this.m_ModelDropdown.selectedIndex].value});
+    this.execute('fuel', this._populateDropdown, this.m_FuelDropdown, {modelId: this.m_ModelDropdown.options[this.m_ModelDropdown.selectedIndex].value});
   }
   
   this.LoadVariants = function()
   {
-	this.execute('variant', this._populateDropdown, this.m_VariantDropdown, {modelId: this.m_ModelDropdown.options[this.m_ModelDropdown.selectedIndex].value, fuelId: this.m_FuelDropdown.options[this.m_FuelDropdown.selectedIndex].value});
+    this.execute('variant', this._populateDropdown, this.m_VariantDropdown, {modelId: this.m_ModelDropdown.options[this.m_ModelDropdown.selectedIndex].value, fuelId: this.m_FuelDropdown.options[this.m_FuelDropdown.selectedIndex].value});
   }
   
   this.LoadOrderForm = function()
   {
-	this.msg('Not implemented');
+    this.msg('Not implemented');
   }
   
   this.OnMakeChange = function(f_Event)
   {
-	this.LoadModels();
+    this.LoadModels();
   }
   
   this.OnModelChange = function()
   {
-	this.LoadFuels();
+    this.LoadFuels();
   }
   
   this.OnFuelChange = function()
   {
-	this.LoadVariants();
+    this.LoadVariants();
   }
   
   this.OnVariantChange = function()
   {
-	this.LoadOrderForm();
+    this.LoadOrderForm();
   }
   
   this._EventDispatcher = function(f_Event)
   {
-	  if(f_Event.srcElement == i_emotionApi.m_MakeDropdown)
-	  {
-		  i_emotionApi.OnMakeChange(f_Event);
-	  }
-	  if(f_Event.srcElement == i_emotionApi.m_ModelDropdown)
-	  {
-		  i_emotionApi.OnModelChange(f_Event);
-	  }
-	  if(f_Event.srcElement == i_emotionApi.m_FuelDropdown)
-	  {
-		  i_emotionApi.OnFuelChange(f_Event);
-	  }
-	  if(f_Event.srcElement == i_emotionApi.m_VariantDropdown)
-	  {
-		  i_emotionApi.OnVariantChange(f_Event);
-	  }
+      if(f_Event.srcElement == i_emotionApi.m_MakeDropdown)
+      {
+          i_emotionApi.OnMakeChange(f_Event);
+      }
+      if(f_Event.srcElement == i_emotionApi.m_ModelDropdown)
+      {
+          i_emotionApi.OnModelChange(f_Event);
+      }
+      if(f_Event.srcElement == i_emotionApi.m_FuelDropdown)
+      {
+          i_emotionApi.OnFuelChange(f_Event);
+      }
+      if(f_Event.srcElement == i_emotionApi.m_VariantDropdown)
+      {
+          i_emotionApi.OnVariantChange(f_Event);
+      }
   }
   
   this.msg = function(f_Msg)
   {
-	if(typeof(console.log) != 'undefined')
-	{
-	  console.log('Emotion Tuning Widget', f_Msg);
-	} else {
-	  f_Msg = 'Emotion Tuning Widget:' + f_Msg;
-	  alert(f_Msg);
-	}
+    if(typeof(console.log) != 'undefined')
+    {
+      console.log('Emotion Tuning Widget', f_Msg);
+    } else {
+      f_Msg = 'Emotion Tuning Widget:' + f_Msg;
+      alert(f_Msg);
+    }
   }
   
   this._removeChildren = function(f_Element)
@@ -188,18 +188,18 @@ function emotionApi()
   
   this._populateDropdown = function(f_Response, f_Dropdown)
   {
-	var l_Option = null;
-	while (f_Dropdown.firstChild)
-	{
-	  f_Dropdown.removeChild(f_Dropdown.firstChild);
-	}
-	for(l_i in f_Response)
-	{
-	  l_Option = document.createElement('option');
-	  l_Option.value = f_Response[l_i].Value;
-	  l_Option.innerHTML = f_Response[l_i].Text;
-	  f_Dropdown.appendChild(l_Option);
-	}
+    var l_Option = null;
+    while (f_Dropdown.firstChild)
+    {
+      f_Dropdown.removeChild(f_Dropdown.firstChild);
+    }
+    for(l_i in f_Response)
+    {
+      l_Option = document.createElement('option');
+      l_Option.value = f_Response[l_i].Value;
+      l_Option.innerHTML = f_Response[l_i].Text;
+      f_Dropdown.appendChild(l_Option);
+    }
   }
 }
  
