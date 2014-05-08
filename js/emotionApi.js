@@ -102,6 +102,11 @@ function emotionApi()
     this.m_FuelDropdown.addEventListener('change', this._EventDispatcher, false);
     this.m_VariantDropdown.addEventListener('change', this._EventDispatcher, false);
     
+	this.m_MakeDropdown.childNodes[0].innerHTML = '- Please select -';
+	this.m_ModelDropdown.childNodes[0].innerHTML = '- Please select above -';
+	this.m_FuelDropdown.childNodes[0].innerHTML = '- Please select above -';
+	this.m_VariantDropdown.childNodes[0].innerHTML = '- Please select above -';
+	
     this.LoadMakes();
   }
   
@@ -143,11 +148,17 @@ function emotionApi()
   this.OnMakeChange = function(f_Event)
   {
     this.LoadModels();
+	this.m_FuelDropdown.selectedIndex = 0;
+	this.m_FuelDropdown.setAttribute('disabled', true);
+	this.m_VariantDropdown.selectedIndex = 0;
+	this.m_VariantDropdown.setAttribute('disabled', true);
   }
   
   this.OnModelChange = function()
   {
     this.LoadFuels();
+	this.m_VariantDropdown.selectedIndex = 0;
+	this.m_VariantDropdown.setAttribute('disabled', true);
   }
   
   this.OnFuelChange = function()
@@ -189,10 +200,6 @@ function emotionApi()
       f_Msg = 'Emotion Tuning Widget:' + f_Msg;
       alert(f_Msg);
     }
-  }
-  
-  this._removeChildren = function(f_Element)
-  {
   }
   
   this._populateDropdown = function(f_Response, f_Dropdown)
