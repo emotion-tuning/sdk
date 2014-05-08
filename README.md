@@ -13,7 +13,7 @@ The general SDK for Emotion tuning's car search API.
 - Check requirements. Does your server support _PHP_? 
   > If not, you need to have a "proxy" script (that mimicks **PHP/json.tunnel.php**) developed in your server's technology and update that script's url in **js/emotionApi.min.js**.
    
-1. ## **index.htm**
+1. #### **index.htm**
    1. Open this file in any code editor
    2. Copy lines between
 
@@ -42,7 +42,7 @@ The general SDK for Emotion tuning's car search API.
    
    5. Paste them in your HTML just before the closing the **&lt;/head&gt;** tag.
 
-2. ## PHP/json.tunnel.php
+2. #### PHP/json.tunnel.php
    1. Locate your API key. If you don't have any, please contact us through our website.
    2. Open the file in any code editor
    3. Replace 
@@ -50,7 +50,7 @@ The general SDK for Emotion tuning's car search API.
    
       with an actual key and save the file
    
-3. ## Update your site
+3. #### Update your site
    1. Upload all files - the changed original site files _and_ the new SDK files - to your PHP server
    2. Check your site in any browser
    3. Share the update with your clients! :-)
