@@ -2,6 +2,7 @@ Emotion Tuning SDK
 ==================
 The general SDK for Emotion tuning's car search API. 
 > Requires a valid API key - to obtain one, please contact us through our [website](https://www.emotion-tuning.com)
+
 - minified JavaScript for minimal loading time
 - requires latest _PHP_
 - supports all _modern_ browsers + IE9 and newer
