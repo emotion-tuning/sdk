@@ -23,15 +23,11 @@ function emotionApi()
   this.m_DD_Model = null;
   this.m_DD_Variant = null;
   this.m_DD_Fuel = null;
+  this.m_Lbl = new Array('- Please select -', '- Please select above -')
   
   this.init = function() 
   {
-    var proceed = true;
-    if(document.getElementById('etObsolete') != null)
-    {
-      proceed = false;
-    }
-    if (proceed)
+    if (document.getElementById('etObsolete') == null)
     {
       window.addEventListener('load', this._OnDocLoad, false);
     }
@@ -47,7 +43,7 @@ function emotionApi()
     {
       l_Data = f_Data;
     }
-    l_Data.et_method = this.m_LastMethod;
+    l_Data.et_method = f_Method;
      
     f_Dropdown.setAttribute('disabled', true);
     l_xhr = new XMLHttpRequest();
@@ -55,7 +51,7 @@ function emotionApi()
       if(l_xhr.readyState != 4) return;
       if(l_xhr.status != 200 && l_xhr.status != 304)
       {
-        l_owner.msg('Unexpected server reply (' + l_xhr.status + ')');
+        l_owner.msg('Error ' + l_xhr.status);
         return;
       }
 	  l_Response = JSON.parse(l_xhr.responseText);
@@ -70,7 +66,7 @@ function emotionApi()
 		f_Dropdown.parentNode.appendChild(l_Error);
 	  }
     }
-    l_xhr.open('POST', 'PHP/json.tunnel.php', true);
+    l_xhr.open('POST', 'PHP/json.channel.php', true);
     l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     l_xhr.send(this._stringify(l_Data));
   }
@@ -82,20 +78,20 @@ function emotionApi()
   
   this._init = function()
   {
-    this.m_DD_Make = document.getElementById('etWidget_make');
-    this.m_DD_Model = document.getElementById('etWidget_model');
-    this.m_DD_Fuel = document.getElementById('etWidget_fuel');
-    this.m_DD_Variant = document.getElementById('etWidget_variant');
+    this.m_DD_Make = document.getElementById('et_make');
+    this.m_DD_Model = document.getElementById('et_model');
+    this.m_DD_Fuel = document.getElementById('et_fuel');
+    this.m_DD_Variant = document.getElementById('et_variant');
     
     this.m_DD_Make.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Model.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Fuel.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
     
-	this.m_DD_Make.childNodes[0].innerHTML = '- Please select -';
-	this.m_DD_Model.childNodes[0].innerHTML = '- Please select above -';
-	this.m_DD_Fuel.childNodes[0].innerHTML = '- Please select above -';
-	this.m_DD_Variant.childNodes[0].innerHTML = '- Please select above -';
+	this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
+	this.m_DD_Model.childNodes[0].innerHTML = this.m_Lbl[1];
+	this.m_DD_Fuel.childNodes[0].innerHTML = this.m_Lbl[1];
+	this.m_DD_Variant.childNodes[0].innerHTML = this.m_Lbl[1];
 	
     this.LoadMakes();
   }
@@ -139,16 +135,16 @@ function emotionApi()
   {
     this.LoadModels();
 	this.m_DD_Fuel.selectedIndex = 0;
-	this.m_DD_Fuel.setAttribute('disabled', true);
+	this.m_DD_Fuel.setAttribute('disabled', 1);
 	this.m_DD_Variant.selectedIndex = 0;
-	this.m_DD_Variant.setAttribute('disabled', true);
+	this.m_DD_Variant.setAttribute('disabled', 1);
   }
   
   this.OnModelChange = function()
   {
     this.LoadFuels();
 	this.m_DD_Variant.selectedIndex = 0;
-	this.m_DD_Variant.setAttribute('disabled', true);
+	this.m_DD_Variant.setAttribute('disabled', 1);
   }
   
   this.OnFuelChange = function()
@@ -186,8 +182,6 @@ function emotionApi()
     if(typeof(console.log) != 'undefined')
     {
       console.log('ET', f_Msg);
-    } else {
-      alert('ET:' + f_Msg);
     }
   }
   
