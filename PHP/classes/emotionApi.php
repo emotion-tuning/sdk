@@ -47,7 +47,7 @@
       unset($l_prependData);      
       $this->m_lastMethod = $f_method;
       $l_response = $this->curl_post(json_encode(array_merge($f_data)));
-      return !is_null(json_decode($l_response)) ? json_decode($l_response) : array('ErrorMessage' => 'Server did not reply with a valid JSON response.', 'raw' => htmlentities($l_response));
+      return !is_null(json_decode($l_response)) ? json_decode($l_response) : (object)array('ErrorMessage' => 'Server did not reply with a valid JSON response.', 'raw' => htmlentities($l_response));
     }
       
     private function curl_post($f_jsonData)

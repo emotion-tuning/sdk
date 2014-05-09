@@ -14,21 +14,23 @@
     <div class="container">
       <!-- emotion widget start -->
       <div class="etWidget">
-        <form action="#" id="et_form" method="post" enctype="multipart/form-data">
-          <!--[if lt IE 8]>
-          Your browser is not supported. Please upgrade.
-          <input type="hidden" id="etObsolete" value="1">
-          <![endif]-->
-          <label for="et_make">Make:</label>
-          <select id="et_make" required disabled name="make"><option value="">- Loading -</option></select>
-          <label for="et_model">Model:</label>
-          <select id="et_model" required disabled name="model"><option value="">- Loading -</option></select>
-          <label for="et_fuel">Fuel:</label>
-          <select id="et_fuel" required disabled name="fuel"><option value="">- Loading -</option></select>
-          <label for="et_variant">Variant:</label>
-          <select id="et_variant" required disabled name="variantId"><option value="">- Loading -</option></select>
-          <input type="submit" value="Search">
-        </form>
+        <header>
+          <img src="_assets/img/CT.png" alt="Logo" width="50%" height="auto" alt="CelticTuning">
+          <h1>Car selector</h1>
+        </header>
+        <div class="etContent">
+          <form action="#" id="et_form" method="post" enctype="multipart/form-data">
+            <label for="et_make">Make:</label>
+            <select id="et_make" required disabled data-method="make" name="makeId"><option value="">- Loading -</option></select>
+            <label for="et_model">Model:</label>
+            <select id="et_model" required disabled data-method="model" name="modelId"><option value="">- Loading -</option></select>
+            <label for="et_fuel">Fuel:</label>
+            <select id="et_fuel" required disabled data-method="fuel" name="fuelId"><option value="">- Loading -</option></select>
+            <label for="et_variant">Variant:</label>
+            <select id="et_variant" required disabled data-method="variant" name="variantId"><option value="">- Loading -</option></select>
+            <input id="et_submit" type="submit" disabled value="Search">
+          </form>
+        </div>
       </div>
       <!-- emotion widget end -->
     </div>

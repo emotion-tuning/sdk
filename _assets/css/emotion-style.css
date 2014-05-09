@@ -1,12 +1,27 @@
+.etWidget header {
+  background-color:#000;
+}
+.etWidget {
+  background-color:#fff;
+  border:1px solid #efefef;
+}
+.etWidget h1 {
+  font-size:1.5em;
+  margin:5px 0px;
+  color:#fff;
+}
 .etWidget select {
-	border:1px solid #ccc;
-	-webkit-border-radius:5px;
-	-moz-border-radius:5px;
-	border-radius:5px;
-	padding:5px 10px;
+  border:1px solid #ccc;
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  border-radius:5px;
+  padding:5px 10px;
 }
 .etError {
-	background-color:#cc0000;
-	color:#fff;
-	padding:5px 10px;
+  background-color:#cc0000;
+  color:#fff;
+  padding:5px 10px;
+}
+.etError a {
+  color:#fff;
 }

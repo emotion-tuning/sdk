@@ -12,19 +12,19 @@
     $l_Method = NULL;
     switch($_REQUEST['et_method']):
       case 'make':
-        $l_Method = '/Module/GetEmotionMakes';
-      break;
-      case 'model':
-        $l_Method = '/Module/GetEmotionModels';
+        $l_Method = '/VehicleLookup/GetMakes';
       break;
       case 'fuel':
-        $l_Method = '/Module/GetEmotionFuels';
+        $l_Method = '/VehicleLookup/GetFuels';
+      break;
+      case 'model':
+        $l_Method = '/VehicleLookup/GetModels';
       break;
       case 'variant':
-        $l_Method = '/Module/GetEmotionVariants';
+        $l_Method = '/VehicleLookup/GetVariants';
       break;
       case 'vehicle':
-        $l_Method = '/Module/GetVehicle';
+        $l_Method = '/VehicleLookup/GetVehicle';
       break;
     endswitch;
     
@@ -34,7 +34,10 @@
     {
       if($key == 'makeId' || $key == 'fuelId' || $key == 'modelId' || $key == 'variantId')
       {
-        $l_Data[$key] = emotionEpiHelpers::sanitize($value);
+		if(trim($value) != '' && $value != -1)
+		{
+          $l_Data[$key] = emotionEpiHelpers::sanitize($value);
+		}
       }
     }
     if(empty($l_Data))
@@ -44,7 +47,22 @@
     
     if(!is_null($l_Method))
     {
-      echo json_encode($i_emotionApi->execute($l_Method, $l_Data));
+	  $l_ResponseObject = $i_emotionApi->execute($l_Method, $l_Data);
+	  // this resolves eMotion/Celtic tuning API's compatibility
+	  if(!isset($l_ResponseObject->ErrorMessage) && !isset($l_ResponseObject->Success))
+	  {  
+	    if(is_array($l_ResponseObject))
+	    {
+	      $l_ResponseObject = (object)array('Items' => $l_ResponseObject);
+	    }
+	    $l_ResponseObject->Success = true;
+	  }
+      echo json_encode($l_ResponseObject);
+	  if(isset($l_ResponseObject->ErrorMessage))
+	  {
+	    error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
+	  }
+	  unset($l_ResponseObject, $l_Data, $l_Method);
     } else {
       echo json_encode(array('ErrorMessage' => 'Invalid method supplied'));
     }

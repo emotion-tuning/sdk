@@ -23,29 +23,52 @@ function emotionApi()
   this.m_DD_Model = null;
   this.m_DD_Variant = null;
   this.m_DD_Fuel = null;
-  this.m_Lbl = new Array('- Please select -', '- Please select above -')
+  this.m_Submit = null;
+  this.m_Form = null;
+  this.m_ShowVehicleCallback = null;
+  this.m_Lbl = new Array('- Please select -', '- Please select above -', 'Please <a href="http://browsehappy.com/">upgrade your browser</a>.')
   
   this.init = function() 
   {
-    if (document.getElementById('etObsolete') == null)
+	if (!this._ltIE9())
     {
       window.addEventListener('load', this._OnDocLoad, false);
-    }
+    } else {
+	  window.attachEvent('onload', function(){
+		l_OldIENotSupported = document.createElement('p');
+		l_OldIENotSupported.innerHTML = i_emotionApi.m_Lbl[2];
+	    l_OldIENotSupported.className = 'etError';
+	    document.getElementById('et_form').appendChild(l_OldIENotSupported);
+	  });
+	}
   }
   
-  this.exe = function(f_Method, f_Callback, f_Dropdown, f_Data)
+  this.exe = function(f_Config)
   {
+	var l_Config = {
+	  method : null,
+	  dropdown: null,
+	  onBefore: null,
+	  callback: null
+	};
+	for(l_i in l_Config)
+	{
+	  if(typeof(f_Config[l_i]) != 'undefined')
+	  {
+	    l_Config[l_i] = f_Config[l_i];
+	  }
+	}
     var l_xhr = null;
     var l_owner = this;
-    var l_Data = {et_method:null};
+    var l_Data = new FormData(this.m_Form);
     
-    if(typeof(f_Data) != 'undefined')
-    {
-      l_Data = f_Data;
-    }
-    l_Data.et_method = f_Method;
-     
-    f_Dropdown.setAttribute('disabled', true);
+    l_Data.append('et_method', l_Config.method);
+    
+	if(l_Config.onBefore != null)
+	{
+      l_Config.onBefore();
+	}
+    
     l_xhr = new XMLHttpRequest();
     l_xhr.onreadystatechange = function() {
       if(l_xhr.readyState != 4) return;
@@ -57,18 +80,23 @@ function emotionApi()
 	  l_Response = JSON.parse(l_xhr.responseText);
 	  if(l_Response.Success)
 	  {
-        f_Callback(l_Response, f_Dropdown);
-        f_Dropdown.removeAttribute('disabled');
+		if(l_Config.dropdown != null)
+		{
+          l_owner._fillDD(l_Response, l_Config.dropdown);
+	    }
+		if(l_Config.callback != null)
+		{
+		  l_Config.callback(l_Response);
+		}
 	  } else {
 		l_Error = document.createElement('p');
 	    l_Error.innerHTML = l_Response.ErrorMessage;
 	    l_Error.className = 'etError';
-		f_Dropdown.parentNode.appendChild(l_Error);
+		l_owner.m_Form.appendChild(l_Error);
 	  }
     }
     l_xhr.open('POST', 'PHP/json.channel.php', true);
-    l_xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    l_xhr.send(this._stringify(l_Data));
+    l_xhr.send(l_Data);
   }
   
   this._OnDocLoad = function(f_Event)
@@ -82,58 +110,49 @@ function emotionApi()
     this.m_DD_Model = document.getElementById('et_model');
     this.m_DD_Fuel = document.getElementById('et_fuel');
     this.m_DD_Variant = document.getElementById('et_variant');
+    this.m_Submit = document.getElementById('et_submit');
+	this.m_Form = document.getElementById('et_form');
     
     this.m_DD_Make.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Model.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Fuel.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
+    this.m_Form.addEventListener('submit', this._EvtDisp, false);
     
+	// initial labels
 	this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
 	this.m_DD_Model.childNodes[0].innerHTML = this.m_Lbl[1];
 	this.m_DD_Fuel.childNodes[0].innerHTML = this.m_Lbl[1];
 	this.m_DD_Variant.childNodes[0].innerHTML = this.m_Lbl[1];
 	
-    this.LoadMakes();
+    this.Load(this.m_DD_Make);
   }
   
-  this._stringify = function(f_Object)
+  this.Load = function(f_Dropdown)
   {
-    var l_Params = '';
-    for(key in f_Object)
-    {
-      l_Params += key + '=' + f_Object[key] + '&';
-    }
-    return l_Params.substr(0, l_Params.length - 1);
+	this.m_Submit.setAttribute('disabled', 1);
+    this.exe({
+	  method : f_Dropdown.getAttribute('data-method'), 
+	  dropdown:f_Dropdown, 
+	  onBefore: function(){f_Dropdown.setAttribute('disabled', true);}, 
+	  callback: function(){f_Dropdown.removeAttribute('disabled');} 
+	});
   }
   
-  this.LoadMakes = function()
+  this.ShowVehicle = function(f_Event)
   {
-    this.exe('make', this._fillDD, this.m_DD_Make);
-  }
-  
-  this.LoadModels = function()
-  {
-    this.exe('model', this._fillDD, this.m_DD_Model, {makeId: this.m_DD_Make.options[this.m_DD_Make.selectedIndex].value});
-  }
-  
-  this.LoadFuels = function()
-  {
-    this.exe('fuel', this._fillDD, this.m_DD_Fuel, {modelId: this.m_DD_Model.options[this.m_DD_Model.selectedIndex].value});
-  }
-  
-  this.LoadVariants = function()
-  {
-    this.exe('variant', this._fillDD, this.m_DD_Variant, {modelId: this.m_DD_Model.options[this.m_DD_Model.selectedIndex].value, fuelId: this.m_DD_Fuel.options[this.m_DD_Fuel.selectedIndex].value});
-  }
-  
-  this.LoadOrderForm = function()
-  {
-    this.msg('Not implemented');
+	var l_Caller = this;
+    this.exe({
+	  method : 'vehicle',  
+	  onBefore: function(){l_Caller.m_Submit.setAttribute('disabled', true);}, 
+	  callback: function(f_Response){l_Caller.m_Submit.removeAttribute('disabled'); l_Caller.m_ShowVehicleCallback(f_Response);}
+	});
+	f_Event.preventDefault();
   }
   
   this.OnMakeChange = function()
   {
-    this.LoadModels();
+    this.Load(this.m_DD_Model);
 	this.m_DD_Fuel.selectedIndex = 0;
 	this.m_DD_Fuel.setAttribute('disabled', 1);
 	this.m_DD_Variant.selectedIndex = 0;
@@ -142,19 +161,24 @@ function emotionApi()
   
   this.OnModelChange = function()
   {
-    this.LoadFuels();
+    this.Load(this.m_DD_Fuel);
 	this.m_DD_Variant.selectedIndex = 0;
 	this.m_DD_Variant.setAttribute('disabled', 1);
   }
   
   this.OnFuelChange = function()
   {
-    this.LoadVariants();
+    this.Load(this.m_DD_Variant);
   }
   
   this.OnVariantChange = function()
   {
-    this.LoadOrderForm();
+	if(this.m_DD_Variant.childNodes[this.m_DD_Variant.selectedIndex].value != '-1')
+	{
+	  this.m_Submit.removeAttribute('disabled');
+	} else {
+	  this.m_Submit.setAttribute('disabled', 1);
+	}
   }
   
   this._EvtDisp = function(f_Event)
@@ -175,14 +199,15 @@ function emotionApi()
       {
           i_emotionApi.OnVariantChange(f_Event);
       }
+      if(f_Event.srcElement == i_emotionApi.m_Form)
+      {
+          i_emotionApi.ShowVehicle(f_Event);
+      }
   }
   
   this.msg = function(f_Msg)
   {
-    if(typeof(console.log) != 'undefined')
-    {
-      console.log('ET', f_Msg);
-    }
+    console.log('ET', f_Msg);
   }
   
   this._fillDD = function(f_Response, f_Dropdown)
@@ -200,7 +225,39 @@ function emotionApi()
       f_Dropdown.appendChild(l_Option);
     }
   }
+  
+  this._ltIE9 = function()
+  {
+	l_test = /msie.[0-9]/.test(window.navigator.userAgent.toLowerCase());
+    return typeof(l_test) != 'undefined' ? l_test : false;
+  }
+}
+
+function recursiveObjectTable(l_Object)
+{
+  var l_ValueTable = document.createElement('table');
+  for(key in l_Object)
+  {
+	var l_ValueTable_Row = document.createElement('tr');
+	var l_ValueTable_Column_Name = document.createElement('td');
+	var l_ValueTable_Column_Value = document.createElement('td');
+	l_ValueTable_Column_Name.innerHTML = key;
+	if(typeof(l_Object[key]) == 'object')
+	{
+	  l_ValueTable_Column_Value.appendChild(recursiveObjectTable(l_Object[key]));
+	} else {
+	  l_ValueTable_Column_Value.innerHTML = l_Object[key];
+	}
+	l_ValueTable_Row.appendChild(l_ValueTable_Column_Name);
+	l_ValueTable_Row.appendChild(l_ValueTable_Column_Value);
+	l_ValueTable.appendChild(l_ValueTable_Row);
+  }
+  return l_ValueTable;
 }
  
 i_emotionApi = new emotionApi;
+i_emotionApi.m_ShowVehicleCallback = function(f_Response){
+  console.log(f_Response);
+  i_emotionApi.m_Form.appendChild(recursiveObjectTable(f_Response));
+} 
 i_emotionApi.init();
