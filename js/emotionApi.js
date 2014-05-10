@@ -183,23 +183,23 @@ function emotionApi()
   
   this._EvtDisp = function(f_Event)
   {
-      if(f_Event.srcElement == i_emotionApi.m_DD_Make)
+      if(f_Event.target == i_emotionApi.m_DD_Make)
       {
           i_emotionApi.OnMakeChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_DD_Model)
+      if(f_Event.target == i_emotionApi.m_DD_Model)
       {
           i_emotionApi.OnModelChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_DD_Fuel)
+      if(f_Event.target == i_emotionApi.m_DD_Fuel)
       {
           i_emotionApi.OnFuelChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_DD_Variant)
+      if(f_Event.target == i_emotionApi.m_DD_Variant)
       {
           i_emotionApi.OnVariantChange(f_Event);
       }
-      if(f_Event.srcElement == i_emotionApi.m_Form)
+      if(f_Event.target == i_emotionApi.m_Form)
       {
           i_emotionApi.ShowVehicle(f_Event);
       }
