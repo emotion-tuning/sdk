@@ -1,3 +1,7 @@
+/* comment this CSS rule to show the car details template for styling purposes */
+.etResult, .etStage {
+  display:none; 
+}
 .etWidget select, .etWidget label {
   display:block;
   width:100%;
@@ -13,6 +17,25 @@
   padding:20px;
   text-align:center;
 }
-.etWidget .etContent {
+.etWidget .etContent, .etResult {
   padding:20px;
+}
+.etShowVehicleButton {
+  text-align:center;
+}
+.etResult table, .etResult p {
+  margin-bottom:20px;
+}
+.etResult table {
+  width:100%;
+}
+.etStage .etStageDesc {
+  margin-left:20px;
+  margin-bottom:10px;
+  position:relative;
+}
+.etStageSelector {
+  display:block;
+  margin-bottom:-35px;
+  padding-top:5px;
 }

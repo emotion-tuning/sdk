@@ -232,32 +232,6 @@ function emotionApi()
     return typeof(l_test) != 'undefined' ? l_test : false;
   }
 }
-
-function recursiveObjectTable(l_Object)
-{
-  var l_ValueTable = document.createElement('table');
-  for(key in l_Object)
-  {
-    var l_ValueTable_Row = document.createElement('tr');
-    var l_ValueTable_Column_Name = document.createElement('td');
-    var l_ValueTable_Column_Value = document.createElement('td');
-    l_ValueTable_Column_Name.innerHTML = key;
-    if(typeof(l_Object[key]) == 'object')
-    {
-      l_ValueTable_Column_Value.appendChild(recursiveObjectTable(l_Object[key]));
-    } else {
-      l_ValueTable_Column_Value.innerHTML = l_Object[key];
-    }
-    l_ValueTable_Row.appendChild(l_ValueTable_Column_Name);
-    l_ValueTable_Row.appendChild(l_ValueTable_Column_Value);
-    l_ValueTable.appendChild(l_ValueTable_Row);
-  }
-  return l_ValueTable;
-}
  
 i_emotionApi = new emotionApi;
-i_emotionApi.m_ShowVehicleCallback = function(f_Response){
-  console.log(f_Response);
-  i_emotionApi.m_Form.appendChild(recursiveObjectTable(f_Response));
-} 
 i_emotionApi.init();
