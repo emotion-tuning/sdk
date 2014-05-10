@@ -1,6 +1,6 @@
 <?php
   define('EMOTION_API_ENDPOINT', 'http://celtictuningapi.co.uk');
-  define('EMOTION_API_KEY', 'INSERT_EMOTION_API_KEY_HERE');
+  define('EMOTION_API_KEY', 'ce4e71de-6906-e211-abb8-2c41385cad6e');
   
   if(isset($_REQUEST['et_method']))
   {
@@ -34,10 +34,10 @@
     {
       if($key == 'makeId' || $key == 'fuelId' || $key == 'modelId' || $key == 'variantId')
       {
-		if(trim($value) != '' && $value != -1)
-		{
+        if(trim($value) != '' && $value != -1)
+        {
           $l_Data[$key] = emotionEpiHelpers::sanitize($value);
-		}
+        }
       }
     }
     if(empty($l_Data))
@@ -47,22 +47,22 @@
     
     if(!is_null($l_Method))
     {
-	  $l_ResponseObject = $i_emotionApi->execute($l_Method, $l_Data);
-	  // this resolves eMotion/Celtic tuning API's compatibility
-	  if(!isset($l_ResponseObject->ErrorMessage) && !isset($l_ResponseObject->Success))
-	  {  
-	    if(is_array($l_ResponseObject))
-	    {
-	      $l_ResponseObject = (object)array('Items' => $l_ResponseObject);
-	    }
-	    $l_ResponseObject->Success = true;
-	  }
+      $l_ResponseObject = $i_emotionApi->execute($l_Method, $l_Data);
+      // this resolves eMotion/Celtic tuning API's compatibility
+      if(!isset($l_ResponseObject->ErrorMessage) && !isset($l_ResponseObject->Success))
+      {  
+        if(is_array($l_ResponseObject))
+        {
+          $l_ResponseObject = (object)array('Items' => $l_ResponseObject);
+        }
+        $l_ResponseObject->Success = true;
+      }
       echo json_encode($l_ResponseObject);
-	  if(isset($l_ResponseObject->ErrorMessage))
-	  {
-	    error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
-	  }
-	  unset($l_ResponseObject, $l_Data, $l_Method);
+      if(isset($l_ResponseObject->ErrorMessage))
+      {
+        error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
+      }
+      unset($l_ResponseObject, $l_Data, $l_Method);
     } else {
       echo json_encode(array('ErrorMessage' => 'Invalid method supplied'));
     }

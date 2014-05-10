@@ -30,44 +30,44 @@ function emotionApi()
   
   this.init = function() 
   {
-	if (!this._ltIE9())
+    if (!this._ltIE9())
     {
       window.addEventListener('load', this._OnDocLoad, false);
     } else {
-	  window.attachEvent('onload', function(){
-		l_OldIENotSupported = document.createElement('p');
-		l_OldIENotSupported.innerHTML = i_emotionApi.m_Lbl[2];
-	    l_OldIENotSupported.className = 'etError';
-	    document.getElementById('et_form').appendChild(l_OldIENotSupported);
-	  });
-	}
+      window.attachEvent('onload', function(){
+        l_OldIENotSupported = document.createElement('p');
+        l_OldIENotSupported.innerHTML = i_emotionApi.m_Lbl[2];
+        l_OldIENotSupported.className = 'etError';
+        document.getElementById('et_form').appendChild(l_OldIENotSupported);
+      });
+    }
   }
   
   this.exe = function(f_Config)
   {
-	var l_Config = {
-	  method : null,
-	  dropdown: null,
-	  onBefore: null,
-	  callback: null
-	};
-	for(l_i in l_Config)
-	{
-	  if(typeof(f_Config[l_i]) != 'undefined')
-	  {
-	    l_Config[l_i] = f_Config[l_i];
-	  }
-	}
+    var l_Config = {
+      method : null,
+      dropdown: null,
+      onBefore: null,
+      callback: null
+    };
+    for(l_i in l_Config)
+    {
+      if(typeof(f_Config[l_i]) != 'undefined')
+      {
+        l_Config[l_i] = f_Config[l_i];
+      }
+    }
     var l_xhr = null;
     var l_owner = this;
     var l_Data = new FormData(this.m_Form);
     
     l_Data.append('et_method', l_Config.method);
     
-	if(l_Config.onBefore != null)
-	{
+    if(l_Config.onBefore != null)
+    {
       l_Config.onBefore();
-	}
+    }
     
     l_xhr = new XMLHttpRequest();
     l_xhr.onreadystatechange = function() {
@@ -77,23 +77,23 @@ function emotionApi()
         l_owner.msg('Error ' + l_xhr.status);
         return;
       }
-	  l_Response = JSON.parse(l_xhr.responseText);
-	  if(l_Response.Success)
-	  {
-		if(l_Config.dropdown != null)
-		{
+      l_Response = JSON.parse(l_xhr.responseText);
+      if(l_Response.Success)
+      {
+        if(l_Config.dropdown != null)
+        {
           l_owner._fillDD(l_Response, l_Config.dropdown);
-	    }
-		if(l_Config.callback != null)
-		{
-		  l_Config.callback(l_Response);
-		}
-	  } else {
-		l_Error = document.createElement('p');
-	    l_Error.innerHTML = l_Response.ErrorMessage;
-	    l_Error.className = 'etError';
-		l_owner.m_Form.appendChild(l_Error);
-	  }
+        }
+        if(l_Config.callback != null)
+        {
+          l_Config.callback(l_Response);
+        }
+      } else {
+        l_Error = document.createElement('p');
+        l_Error.innerHTML = l_Response.ErrorMessage;
+        l_Error.className = 'etError';
+        l_owner.m_Form.appendChild(l_Error);
+      }
     }
     l_xhr.open('POST', 'PHP/json.channel.php', true);
     l_xhr.send(l_Data);
@@ -111,7 +111,7 @@ function emotionApi()
     this.m_DD_Fuel = document.getElementById('et_fuel');
     this.m_DD_Variant = document.getElementById('et_variant');
     this.m_Submit = document.getElementById('et_submit');
-	this.m_Form = document.getElementById('et_form');
+    this.m_Form = document.getElementById('et_form');
     
     this.m_DD_Make.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Model.addEventListener('change', this._EvtDisp, false);
@@ -119,51 +119,51 @@ function emotionApi()
     this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
     this.m_Form.addEventListener('submit', this._EvtDisp, false);
     
-	// initial labels
-	this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
-	this.m_DD_Model.childNodes[0].innerHTML = this.m_Lbl[1];
-	this.m_DD_Fuel.childNodes[0].innerHTML = this.m_Lbl[1];
-	this.m_DD_Variant.childNodes[0].innerHTML = this.m_Lbl[1];
-	
+    // initial labels
+    this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
+    this.m_DD_Model.childNodes[0].innerHTML = this.m_Lbl[1];
+    this.m_DD_Fuel.childNodes[0].innerHTML = this.m_Lbl[1];
+    this.m_DD_Variant.childNodes[0].innerHTML = this.m_Lbl[1];
+    
     this.Load(this.m_DD_Make);
   }
   
   this.Load = function(f_Dropdown)
   {
-	this.m_Submit.setAttribute('disabled', 1);
+    this.m_Submit.setAttribute('disabled', 1);
     this.exe({
-	  method : f_Dropdown.getAttribute('data-method'), 
-	  dropdown:f_Dropdown, 
-	  onBefore: function(){f_Dropdown.setAttribute('disabled', true);}, 
-	  callback: function(){f_Dropdown.removeAttribute('disabled');} 
-	});
+      method : f_Dropdown.getAttribute('data-method'), 
+      dropdown:f_Dropdown, 
+      onBefore: function(){f_Dropdown.setAttribute('disabled', true);}, 
+      callback: function(){f_Dropdown.removeAttribute('disabled');} 
+    });
   }
   
   this.ShowVehicle = function(f_Event)
   {
-	var l_Caller = this;
+    var l_Caller = this;
     this.exe({
-	  method : 'vehicle',  
-	  onBefore: function(){l_Caller.m_Submit.setAttribute('disabled', true);}, 
-	  callback: function(f_Response){l_Caller.m_Submit.removeAttribute('disabled'); l_Caller.m_ShowVehicleCallback(f_Response);}
-	});
-	f_Event.preventDefault();
+      method : 'vehicle',  
+      onBefore: function(){l_Caller.m_Submit.setAttribute('disabled', true);}, 
+      callback: function(f_Response){l_Caller.m_Submit.removeAttribute('disabled'); l_Caller.m_ShowVehicleCallback(f_Response);}
+    });
+    f_Event.preventDefault();
   }
   
   this.OnMakeChange = function()
   {
     this.Load(this.m_DD_Model);
-	this.m_DD_Fuel.selectedIndex = 0;
-	this.m_DD_Fuel.setAttribute('disabled', 1);
-	this.m_DD_Variant.selectedIndex = 0;
-	this.m_DD_Variant.setAttribute('disabled', 1);
+    this.m_DD_Fuel.selectedIndex = 0;
+    this.m_DD_Fuel.setAttribute('disabled', 1);
+    this.m_DD_Variant.selectedIndex = 0;
+    this.m_DD_Variant.setAttribute('disabled', 1);
   }
   
   this.OnModelChange = function()
   {
     this.Load(this.m_DD_Fuel);
-	this.m_DD_Variant.selectedIndex = 0;
-	this.m_DD_Variant.setAttribute('disabled', 1);
+    this.m_DD_Variant.selectedIndex = 0;
+    this.m_DD_Variant.setAttribute('disabled', 1);
   }
   
   this.OnFuelChange = function()
@@ -173,12 +173,12 @@ function emotionApi()
   
   this.OnVariantChange = function()
   {
-	if(this.m_DD_Variant.childNodes[this.m_DD_Variant.selectedIndex].value != '-1')
-	{
-	  this.m_Submit.removeAttribute('disabled');
-	} else {
-	  this.m_Submit.setAttribute('disabled', 1);
-	}
+    if(this.m_DD_Variant.childNodes[this.m_DD_Variant.selectedIndex].value != '-1')
+    {
+      this.m_Submit.removeAttribute('disabled');
+    } else {
+      this.m_Submit.setAttribute('disabled', 1);
+    }
   }
   
   this._EvtDisp = function(f_Event)
@@ -228,7 +228,7 @@ function emotionApi()
   
   this._ltIE9 = function()
   {
-	l_test = /msie.[0-9]/.test(window.navigator.userAgent.toLowerCase());
+    l_test = /msie.[0-9]/.test(window.navigator.userAgent.toLowerCase());
     return typeof(l_test) != 'undefined' ? l_test : false;
   }
 }
@@ -238,19 +238,19 @@ function recursiveObjectTable(l_Object)
   var l_ValueTable = document.createElement('table');
   for(key in l_Object)
   {
-	var l_ValueTable_Row = document.createElement('tr');
-	var l_ValueTable_Column_Name = document.createElement('td');
-	var l_ValueTable_Column_Value = document.createElement('td');
-	l_ValueTable_Column_Name.innerHTML = key;
-	if(typeof(l_Object[key]) == 'object')
-	{
-	  l_ValueTable_Column_Value.appendChild(recursiveObjectTable(l_Object[key]));
-	} else {
-	  l_ValueTable_Column_Value.innerHTML = l_Object[key];
-	}
-	l_ValueTable_Row.appendChild(l_ValueTable_Column_Name);
-	l_ValueTable_Row.appendChild(l_ValueTable_Column_Value);
-	l_ValueTable.appendChild(l_ValueTable_Row);
+    var l_ValueTable_Row = document.createElement('tr');
+    var l_ValueTable_Column_Name = document.createElement('td');
+    var l_ValueTable_Column_Value = document.createElement('td');
+    l_ValueTable_Column_Name.innerHTML = key;
+    if(typeof(l_Object[key]) == 'object')
+    {
+      l_ValueTable_Column_Value.appendChild(recursiveObjectTable(l_Object[key]));
+    } else {
+      l_ValueTable_Column_Value.innerHTML = l_Object[key];
+    }
+    l_ValueTable_Row.appendChild(l_ValueTable_Column_Name);
+    l_ValueTable_Row.appendChild(l_ValueTable_Column_Value);
+    l_ValueTable.appendChild(l_ValueTable_Row);
   }
   return l_ValueTable;
 }
