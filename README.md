@@ -28,7 +28,7 @@ The general SDK for Celtic/Emotion tuning's car search API.
       <!-- emotion widget end -->
       ```
    
-   3. Paste it to the desired place in your HTML - be it a WordPress template, HTML template or any other file that generates HTML that you must have downloaded from your server.
+   3. Paste it to the desired place in your HTML - be it a WordPress template, HTML template or any other file that generates HTML on your server.
    4. Copy lines between
 
       ```HTML
@@ -41,7 +41,7 @@ The general SDK for Celtic/Emotion tuning's car search API.
       <!-- emotion dependencies end -->
       ```
    
-   5. Paste them in your HTML just before the closing the **&lt;/head&gt;** tag.
+   5. Paste them in your HTML just before the closing **&lt;/head&gt;** tag.
 
 2. #### PHP/json.channel.php
    1. Locate your API key. If you don't have any, please contact us through our website.
@@ -73,5 +73,5 @@ The general SDK for Celtic/Emotion tuning's car search API.
 
 #### Customization
 - You can insert your own logo by replacing *_assets/img/logo.png* with an image of your own
-- You can remove the whole black header by removing everything between and including *<header>* and *</header>*
+- You can remove the whole black header by removing everything between and including *&lt;header&gt;* and *&lt;/header&gt;*
 - You can change the color scheme in *_assets/css/etct-style.css*
