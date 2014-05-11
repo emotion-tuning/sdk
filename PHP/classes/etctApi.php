@@ -16,13 +16,13 @@
  * @link       https://www.emotion-tuning.com
  */
 
-  class emotionApi
+  class etctApi
   {
     private $m_endpoint;
     private $m_apiKey;
     private $m_lastMethod;
       
-    public function __construct($f_endpoint = EMOTION_API_ENDPOINT, $f_apiKey = EMOTION_API_KEY)
+    public function __construct($f_endpoint = ETCT_API_ENDPOINT, $f_apiKey = ETCT_API_KEY)
     {
       $this->checkDependencies();
       $this->m_endpoint = $f_endpoint;
@@ -60,6 +60,7 @@
         'Content-Type: application/json',
         'Content-Length: ' . strlen($f_jsonData))
       );
+      error_log("\r\n".$this->m_endpoint . $this->m_lastMethod . '?'.http_build_query(json_decode($f_jsonData)), 3, 'log.log');
 
       if(!$l_result = curl_exec($l_ch))
       {
@@ -80,12 +81,16 @@
     }
   }
   
-  class emotionEpiHelpers
+  class etctApiHelpers
   {
-    public static function sanitize($f_Input)
+    public static function sanitize($f_Input, $f_Email = false)
     {
       $l_output = '';
       $l_allowedCharacters = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '-', '_', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
+      if($f_Email)
+      {
+        array_push($l_allowedCharacters, '@');
+      }
       for($l_i = 0, $l_max = strlen($f_Input); $l_i < $l_max; $l_i++)
       {
         if(in_array(strtolower(substr($f_Input, $l_i, 1)), $l_allowedCharacters))

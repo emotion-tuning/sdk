@@ -1,0 +1,49 @@
+/* comment this CSS rule to show the car details template for styling purposes */
+.etResult, .etStage, .etRequestQuote {
+  display:none; 
+}
+.etWidget select, .etWidget label, .etRequestQuote label, .etRequestQuote select, .etRequestQuote .etFullWidth {
+  display:block;
+  width:100%;
+  margin-bottom:10px;
+}
+.etRequestQuote .etFullWidth {
+  box-sizing: border-box; /* css3 rec */
+  -moz-box-sizing: border-box; /* ff2 */
+  -ms-box-sizing: border-box; /* ie8 */
+  -webkit-box-sizing: border-box; /* safari3 */
+  -khtml-box-sizing: border-box; /* konqueror */
+}
+.etWidget label, .etRequestQuote {
+  margin-bottom:5px;
+}
+.etWidget header {
+  display:block !important;
+  padding:20px;
+  text-align:center;
+}
+.etWidget .etContent, .etResult, .etRequestQuote {
+  padding:20px;
+}
+.etSubmitButton {
+  text-align:center;
+}
+.etResult table, .etResult p {
+  margin-bottom:20px;
+}
+.etResult table {
+  width:100%;
+}
+.etStage .etStageDesc {
+  margin-left:20px;
+  margin-bottom:10px;
+  position:relative;
+}
+.etStageSelector {
+  display:block;
+  margin-bottom:-35px;
+  padding-top:5px;
+}
+.etError, .etNotice {
+  padding:5px 10px;
+}

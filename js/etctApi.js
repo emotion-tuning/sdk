@@ -15,9 +15,9 @@
  * @link       https://www.emotion-tuning.com
  */
   
-var i_emotionApi;
+var i_etctApi;
  
-function emotionApi()
+function etctApi()
 {
   this.m_DD_Make = null;
   this.m_DD_Model = null;
@@ -36,9 +36,9 @@ function emotionApi()
     } else {
       window.attachEvent('onload', function(){
         l_OldIENotSupported = document.createElement('p');
-        l_OldIENotSupported.innerHTML = i_emotionApi.m_Lbl[2];
+        l_OldIENotSupported.innerHTML = i_etctApi.m_Lbl[2];
         l_OldIENotSupported.className = 'etError';
-        document.getElementById('et_form').appendChild(l_OldIENotSupported);
+        document.getElementById('etct_form').appendChild(l_OldIENotSupported);
       });
     }
   }
@@ -49,7 +49,8 @@ function emotionApi()
       method : null,
       dropdown: null,
       onBefore: null,
-      callback: null
+      callback: null,
+      data: null
     };
     for(l_i in l_Config)
     {
@@ -58,11 +59,15 @@ function emotionApi()
         l_Config[l_i] = f_Config[l_i];
       }
     }
+    if(l_Config.data == null)
+    {
+      l_Config.data = new FormData(this.m_Form);
+    }
     var l_xhr = null;
     var l_owner = this;
-    var l_Data = new FormData(this.m_Form);
+    var l_Data = l_Config.data;
     
-    l_Data.append('et_method', l_Config.method);
+    l_Data.append('etct_method', l_Config.method);
     
     if(l_Config.onBefore != null)
     {
@@ -84,15 +89,15 @@ function emotionApi()
         {
           l_owner._fillDD(l_Response, l_Config.dropdown);
         }
-        if(l_Config.callback != null)
-        {
-          l_Config.callback(l_Response);
-        }
-      } else {
+      } else if(l_Response.ErrorMessage != null) {
         l_Error = document.createElement('p');
         l_Error.innerHTML = l_Response.ErrorMessage;
         l_Error.className = 'etError';
         l_owner.m_Form.appendChild(l_Error);
+      }
+      if(l_Config.callback != null)
+      {
+        l_Config.callback(l_Response);
       }
     }
     l_xhr.open('POST', 'PHP/json.channel.php', true);
@@ -101,17 +106,17 @@ function emotionApi()
   
   this._OnDocLoad = function(f_Event)
   {
-    i_emotionApi._init();
+    i_etctApi._init();
   }
   
   this._init = function()
   {
-    this.m_DD_Make = document.getElementById('et_make');
-    this.m_DD_Model = document.getElementById('et_model');
-    this.m_DD_Fuel = document.getElementById('et_fuel');
-    this.m_DD_Variant = document.getElementById('et_variant');
-    this.m_Submit = document.getElementById('et_submit');
-    this.m_Form = document.getElementById('et_form');
+    this.m_DD_Make = document.getElementById('etct_make');
+    this.m_DD_Model = document.getElementById('etct_model');
+    this.m_DD_Fuel = document.getElementById('etct_fuel');
+    this.m_DD_Variant = document.getElementById('etct_variant');
+    this.m_Submit = document.getElementById('etct_submit');
+    this.m_Form = document.getElementById('etct_form');
     
     this.m_DD_Make.addEventListener('change', this._EvtDisp, false);
     this.m_DD_Model.addEventListener('change', this._EvtDisp, false);
@@ -183,26 +188,26 @@ function emotionApi()
   
   this._EvtDisp = function(f_Event)
   {
-      if(f_Event.target == i_emotionApi.m_DD_Make)
-      {
-          i_emotionApi.OnMakeChange(f_Event);
-      }
-      if(f_Event.target == i_emotionApi.m_DD_Model)
-      {
-          i_emotionApi.OnModelChange(f_Event);
-      }
-      if(f_Event.target == i_emotionApi.m_DD_Fuel)
-      {
-          i_emotionApi.OnFuelChange(f_Event);
-      }
-      if(f_Event.target == i_emotionApi.m_DD_Variant)
-      {
-          i_emotionApi.OnVariantChange(f_Event);
-      }
-      if(f_Event.target == i_emotionApi.m_Form)
-      {
-          i_emotionApi.ShowVehicle(f_Event);
-      }
+    if(f_Event.target == i_etctApi.m_DD_Make)
+    {
+      i_etctApi.OnMakeChange(f_Event);
+    }
+    if(f_Event.target == i_etctApi.m_DD_Model)
+    {
+      i_etctApi.OnModelChange(f_Event);
+    }
+    if(f_Event.target == i_etctApi.m_DD_Fuel)
+    {
+      i_etctApi.OnFuelChange(f_Event);
+    }
+    if(f_Event.target == i_etctApi.m_DD_Variant)
+    {
+      i_etctApi.OnVariantChange(f_Event);
+    }
+    if(f_Event.target == i_etctApi.m_Form)
+    {
+      i_etctApi.ShowVehicle(f_Event);
+    }
   }
   
   this.msg = function(f_Msg)
@@ -233,5 +238,5 @@ function emotionApi()
   }
 }
  
-i_emotionApi = new emotionApi;
-i_emotionApi.init();
+i_etctApi = new etctApi;
+i_etctApi.init();

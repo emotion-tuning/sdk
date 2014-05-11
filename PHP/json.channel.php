@@ -1,16 +1,17 @@
 <?php
-  define('EMOTION_API_ENDPOINT', 'http://celtictuningapi.co.uk');
-  define('EMOTION_API_KEY', 'ce4e71de-6906-e211-abb8-2c41385cad6e');
+  define('ETCT_API_ENDPOINT', 'http://celtictuningapi.co.uk');
+  define('ETCT_API_KEY', 'INSERT_API_KEY_HERE');
+  define('DEALER_EMAIL', NULL);
   
-  if(isset($_REQUEST['et_method']))
+  if(isset($_REQUEST['etct_method']))
   {
-    require_once('classes/emotionApi.php');
-    $i_emotionApi = new emotionApi;
+    require_once('classes/etctApi.php');
+    $i_etctApi = new etctApi;
     header('Content-Type: application/json');
     
     // only work with allowed methods
     $l_Method = NULL;
-    switch($_REQUEST['et_method']):
+    switch($_REQUEST['etct_method']):
       case 'make':
         $l_Method = '/VehicleLookup/GetMakes';
       break;
@@ -26,17 +27,24 @@
       case 'vehicle':
         $l_Method = '/VehicleLookup/GetVehicle';
       break;
+      case 'request':
+        $l_Method = '/VehicleLookup/SubmitWebQuoteRequest';
+      break;
     endswitch;
     
     // only pass allowed data
     $l_Data = array();
     foreach($_REQUEST as $key=>$value)
     {
-      if($key == 'makeId' || $key == 'fuelId' || $key == 'modelId' || $key == 'variantId')
+      if($key != 'etct_method')
       {
         if(trim($value) != '' && $value != -1)
         {
-          $l_Data[$key] = emotionEpiHelpers::sanitize($value);
+          $l_Data[$key] = etctApiHelpers::sanitize($value, true);
+          if($key == 'email' && defined(DEALER_EMAIL))
+          {
+            $l_Data[$key] .= ',' . DEALER_EMAIL; 
+          }
         }
       }
     }
@@ -47,7 +55,7 @@
     
     if(!is_null($l_Method))
     {
-      $l_ResponseObject = $i_emotionApi->execute($l_Method, $l_Data);
+      $l_ResponseObject = $i_etctApi->execute($l_Method, $l_Data);
       // this resolves eMotion/Celtic tuning API's compatibility
       if(!isset($l_ResponseObject->ErrorMessage) && !isset($l_ResponseObject->Success))
       {  
@@ -55,10 +63,13 @@
         {
           $l_ResponseObject = (object)array('Items' => $l_ResponseObject);
         }
-        $l_ResponseObject->Success = true;
+        if(!isset($l_ResponseObject->Successful))
+        {
+          $l_ResponseObject->Success = true;
+        }
       }
       echo json_encode($l_ResponseObject);
-      if(isset($l_ResponseObject->ErrorMessage))
+      if(isset($l_ResponseObject->ErrorMessage) || isset($l_ResponseObject->ValidationErrors))
       {
         error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
       }

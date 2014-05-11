@@ -1,11 +1,11 @@
-Emotion Tuning SDK
-==================
-The general SDK for Emotion tuning's car search API. 
+Celtic Tuning / Emotion Tuning SDK
+==================================
+The general SDK for Celtic/Emotion tuning's car search API. 
 > Requires a valid API key - to obtain one, please contact us through our [website](https://www.emotion-tuning.com)
 
-- minified JavaScript for minimal loading time
 - requires latest _PHP_
 - supports all _modern_ browsers + IE9 and newer
+- old versions of Internet Explorer (older than IE8, included) **ARE NOT SUPPORTED**
 
 ## DEMO
 [Click here to open a demo](https://www.emotion-tuning.com/SDK/index.htm)
@@ -28,7 +28,7 @@ The general SDK for Emotion tuning's car search API.
       <!-- emotion widget end -->
       ```
    
-   3. Paste it to the desired place in your HTML
+   3. Paste it to the desired place in your HTML - be it a WordPress template, HTML template or any other file that generates HTML that you must have downloaded from your server.
    4. Copy lines between
 
       ```HTML
@@ -47,7 +47,7 @@ The general SDK for Emotion tuning's car search API.
    1. Locate your API key. If you don't have any, please contact us through our website.
    2. Open the file in any code editor
    3. Replace 
-      > INSERT_EMOTION_API_KEY_HERE
+      > INSERT_API_KEY_HERE
    
       with an actual key and save the file
    
@@ -55,3 +55,23 @@ The general SDK for Emotion tuning's car search API.
    1. Upload all files - the changed original site files _and_ the new SDK files - to your PHP server
    2. Check your site in any browser
    3. Share the update with your clients! :-)
+   
+### Appendix
+
+#### How to send the request to your e-mail address
+1. Go to **PHP/json.channel.php** and change 
+   ```PHP
+   define('DEALER_EMAIL', NULL);
+   ```
+   
+   so you will place your e-mail within single quotes in place of *NULL*, example:
+   ```PHP
+   define('DEALER_EMAIL', 'test@test.com');
+   ```
+   
+2. Save & upload your file.
+
+#### Customization
+- You can insert your own logo by replacing *_assets/img/logo.png* with an image of your own
+- You can remove the whole black header by removing everything between and including *<header>* and *</header>*
+- You can change the color scheme in *_assets/css/etct-style.css*
