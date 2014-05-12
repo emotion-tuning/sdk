@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Celtic Tuning/Emotion Tuning Javascript SDK example</title>
+    <link rel="stylesheet" href="_assets/css/etct-microsite.min.css" media="all">
+    <!-- emotion dependencies start -->
+    <link rel="stylesheet" href="_assets/css/etct-base.css" media="all">
+    <link rel="stylesheet" href="_assets/css/etct-style.css" media="screen">
+    <script type="text/javascript" src="js/etctApi.min.js"></script>
+    <!-- emotion dependencies end -->
+  </head>
+  <body>
+    <div class="container">
+      <!-- emotion widget start -->
+      <div class="etWidget">
+        <header>
+          <img src="_assets/img/logo.png" alt="Logo" width="50%" height="auto" alt="CelticTuning">
+          <h1>Car selector</h1>
+        </header>
+        <div class="etContent">
+          <form action="detail.htm" id="etct_form" method="post" enctype="multipart/form-data">
+            <label for="etct_make">Make:</label>
+            <select id="etct_make" required disabled data-method="make" name="makeId"><option value="">- Loading -</option></select>
+            <label for="etct_model">Model:</label>
+            <select id="etct_model" required disabled data-method="model" name="modelId"><option value="">- Loading -</option></select>
+            <label for="etct_fuel">Fuel:</label>
+            <select id="etct_fuel" required disabled data-method="fuel" name="fuelId"><option value="">- Loading -</option></select>
+            <label for="etct_variant">Variant:</label>
+            <select id="etct_variant" required disabled data-method="variant" name="variantId"><option value="">- Loading -</option></select>
+            <div class="etSubmitButton"><input id="etct_submit" type="submit" disabled value="Show"></div>
+          </form>
+        </div>
+      </div>
+      <div class="etResult" id="etct_result">
+        <h2>
+          <span id="etct_ModelAndPlatformName"></span>
+        </h2>
+        <img src="_assets/img/placeholder.png" id="etct_VehicleModelImageUrl" width="auto" height="auto" alt="img" />
+        <p><span id="etct_CustomerNotes"></span></p>
+        
+        <h2>Vehicle stats</h2>
+        <table class="etVehicleStats">
+          <tr>
+            <td><strong>Model:</strong></td>
+            <td><span id="etct_ModelName"></span></td>
+          </tr>
+          <tr>
+            <td><strong>Variant:</strong></td>
+            <td><span id="etct_VariantName"></span></td>
+          </tr>
+          <tr>
+            <td><strong>Years:</strong></td>
+            <td><span id="etct_VariantFromYear"></span> - <span id="etct_VariantToYear"></span></td>
+          </tr>
+          <tr>
+            <td><strong>Fuel:</strong></td>
+            <td><span id="etct_Fuel"></span></td>
+          </tr>
+          <tr>
+            <td><strong>Engine Size:</strong></td>
+            <td><span id="etct_EngineCC">0</span>ccm</td>
+          </tr>
+          <tr>
+            <td><strong>ECU Type:</strong></td>
+            <td><span id="etct_ECUType"></span></td>
+          </tr>
+        </table>
+        <h2>
+          Stages
+        </h2>
+        <div class="etStage" id="etct_template_stage">
+          <div class="etStageSelector">
+            <input type="radio" class="etct_TuningStageId etct_StageSelector" name="TuningStageId">
+          </div>
+          <div class="etStageDesc">
+            <h3>
+              <span class="etct_TuningStageTitle">Stage title</span>
+            </h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Specs
+                  </th>
+                  <th>
+                    Original
+                  </th>
+                  <th>
+                    Modified
+                  </th>
+                  <th>
+                    +
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Power (<span id="etct_StandardPowerUnit"></span>)
+                  </td>
+                  <td>
+                    <span id="etct_StandardPower"></span>
+                  </td>
+                  <td>
+                    <span class="etct_ModifiedPower"></span>
+                  </td>
+                  <td>
+                    <span class="etct_PowerGain"></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Torque (<span id="etct_StandardTorqueUnit"></span>)
+                  </td>
+                  <td>
+                    <span id="etct_StandardTorque"></span>
+                  </td>
+                  <td>
+                    <span class="etct_ModifiedTorque"></span>
+                  </td>
+                  <td>
+                    <span class="etct_TorqueGain"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="etct_TuningStages" class="etStages"></div>          
+        <h2>
+          Available Options
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>
+                DPF Removal
+              </th>
+              <th>
+                EGR Removal
+              </th>
+              <th>
+                VMax Removal
+              </th>
+              <th>
+                Rev limiter Removal
+              </th>
+              <th>
+                Launch Control
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="checkbox" id="etct_DpfRemovalAvailable" name="Options[DpfRemoval]" disabled>
+              </td>
+              <td>
+                <input type="checkbox" id="etct_EgrRemovalAvailable" name="Options[EgrRemoval]" disabled>
+              </td>
+              <td>
+                <input type="checkbox" id="etct_VMaxRemovalAvailable" name="Options[VMaxRemoval]" disabled>
+              </td>
+              <td>
+                <input type="checkbox" id="etct_RevLimiterRemovalAvailable" name="Options[RevLimiterRemoval]" disabled>
+              </td>
+              <td>
+                <input type="checkbox" id="etct_LaunchControlAvailable" name="Options[LaunchControl]" disabled>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="etRequestQuote" id="etct_requestQuote">
+        <h2>
+          Quote request
+        </h2>
+        <form action="#" id="etct_rq_form">
+          <label for="etct_customerName">Name<span class="etRequired">*</span></label>
+          <input type="text" id="etct_customerName" name="customerName" required class="etFullWidth">
+          <label for="etct_email">E-mail<span class="etRequired">*</span></label>
+          <input type="email" id="etct_email" name="email" required class="etFullWidth">
+          <label for="etct_telephone">Telephone</label>
+          <input type="text" id="etct_telephone" name="telephone" class="etFullWidth">
+          <label for="etct_vehicleYear">Vehicle year<span class="etRequired">*</span></label>
+          <select name="vehicleYear" id="etct_vehicleYear" required><option value="">- Please select -</option></select>
+          <label for="etct_address">Address</label>
+          <input type="text" id="etct_address" name="address" class="etFullWidth">
+          <label for="etct_townCity">Town/city<span class="etRequired">*</span></label>
+          <input type="text" id="etct_townCity" name="townCity" required class="etFullWidth">
+          <label for="etct_countryState">Country/State</label>
+          <input type="text" id="etct_countryState" name="countryState" class="etFullWidth">
+          <label for="etct_postCode">ZIP</label>
+          <input type="text" id="etct_postCode" name="postCode" class="etFullWidth">
+          <label for="etct_additionalComments">Additional comments</label>
+          <textarea id="etct_additionalComments" name="additionalComments" class="etFullWidth"></textarea>
+          <div class="etSubmitButton"><input id="etct_requestSubmit" type="submit" value="Send quote request"></div>
+        </form>
+      </div>
+      <!-- emotion widget end -->
+    </div>
+  </body>
+</html>

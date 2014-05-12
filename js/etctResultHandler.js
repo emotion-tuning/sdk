@@ -159,28 +159,31 @@ function emotionResponseHandler()
       }
     }
     
-    document.getElementById('etct_result').style.display = 'block';
+	if(document.getElementById('etct_result') != null)
+	{
+      document.getElementById('etct_result').style.display = 'block';
     
-    // prepare and show the request form
-    l_toYear = new Date().getFullYear();
-    if(this.m_lastCar['VariantToYear'] != null)
-    {
-      l_toYear = parseInt(this.m_lastCar['VariantToYear']);
-    }
-    // clear any previously populated data
-    while (document.getElementById('etct_vehicleYear').firstChild)
-    {
-      document.getElementById('etct_vehicleYear').removeChild(document.getElementById('etct_vehicleYear').firstChild);
-    }
-    for(l_year = this.m_lastCar['VariantFromYear']; l_year < l_toYear; l_year++)
-    {
-      var l_yearOpt = document.createElement('option');
-      l_yearOpt.setAttribute('value', l_year);
-      l_yearOpt.innerHTML = l_year;
-      document.getElementById('etct_vehicleYear').appendChild(l_yearOpt);
-    }
-    document.getElementById('etct_requestQuote').style.display = 'block';
-    document.getElementById('etct_rq_form').style.display = 'block';
+      // prepare and show the request form
+      l_toYear = new Date().getFullYear();
+      if(this.m_lastCar['VariantToYear'] != null)
+      {
+        l_toYear = parseInt(this.m_lastCar['VariantToYear']);
+      }
+      // clear any previously populated data
+      while (document.getElementById('etct_vehicleYear').firstChild)
+      {
+        document.getElementById('etct_vehicleYear').removeChild(document.getElementById('etct_vehicleYear').firstChild);
+      }
+      for(l_year = this.m_lastCar['VariantFromYear']; l_year < l_toYear; l_year++)
+      {
+        var l_yearOpt = document.createElement('option');
+        l_yearOpt.setAttribute('value', l_year);
+        l_yearOpt.innerHTML = l_year;
+        document.getElementById('etct_vehicleYear').appendChild(l_yearOpt);
+      }
+      document.getElementById('etct_requestQuote').style.display = 'block';
+      document.getElementById('etct_rq_form').style.display = 'block';
+	}
   }
 }
 
