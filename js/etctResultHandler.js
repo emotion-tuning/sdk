@@ -19,6 +19,15 @@ function emotionResponseHandler()
     }
   }
   
+  this.autoload = function(f_Event)
+  {
+    if(i_etctApi.m_DD_LastLoaded == i_etctApi.m_DD_Variant)
+    {
+  	  i_etctApi.ShowVehicle(f_Event);
+      window.removeEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
+    }
+  }
+  
   this.dismissErrors = function()
   {
     try {
@@ -159,31 +168,28 @@ function emotionResponseHandler()
       }
     }
     
-	if(document.getElementById('etct_result') != null)
-	{
-      document.getElementById('etct_result').style.display = 'block';
+    document.getElementById('etct_result').style.display = 'block';
     
-      // prepare and show the request form
-      l_toYear = new Date().getFullYear();
-      if(this.m_lastCar['VariantToYear'] != null)
-      {
-        l_toYear = parseInt(this.m_lastCar['VariantToYear']);
-      }
-      // clear any previously populated data
-      while (document.getElementById('etct_vehicleYear').firstChild)
-      {
-        document.getElementById('etct_vehicleYear').removeChild(document.getElementById('etct_vehicleYear').firstChild);
-      }
-      for(l_year = this.m_lastCar['VariantFromYear']; l_year < l_toYear; l_year++)
-      {
-        var l_yearOpt = document.createElement('option');
-        l_yearOpt.setAttribute('value', l_year);
-        l_yearOpt.innerHTML = l_year;
-        document.getElementById('etct_vehicleYear').appendChild(l_yearOpt);
-      }
-      document.getElementById('etct_requestQuote').style.display = 'block';
-      document.getElementById('etct_rq_form').style.display = 'block';
-	}
+    // prepare and show the request form
+    l_toYear = new Date().getFullYear();
+    if(this.m_lastCar['VariantToYear'] != null)
+    {
+      l_toYear = parseInt(this.m_lastCar['VariantToYear']);
+    }
+    // clear any previously populated data
+    while (document.getElementById('etct_vehicleYear').firstChild)
+    {
+      document.getElementById('etct_vehicleYear').removeChild(document.getElementById('etct_vehicleYear').firstChild);
+    }
+    for(l_year = this.m_lastCar['VariantFromYear']; l_year < l_toYear; l_year++)
+    {
+      var l_yearOpt = document.createElement('option');
+      l_yearOpt.setAttribute('value', l_year);
+      l_yearOpt.innerHTML = l_year;
+      document.getElementById('etct_vehicleYear').appendChild(l_yearOpt);
+    }
+    document.getElementById('etct_requestQuote').style.display = 'block';
+    document.getElementById('etct_rq_form').style.display = 'block';
   }
 }
 
@@ -192,10 +198,28 @@ if(typeof(i_etctApi) != 'undefined')
 {
   if(!i_etctApi._ltIE9())
   {
-    window.addEventListener('load', function(){i_emotionResponseHandler.init();}, false);
-    i_etctApi.m_ShowVehicleCallback = function(f_Response){
-      i_emotionResponseHandler.m_lastCar = f_Response;
-      i_emotionResponseHandler.fillVehicleProperties();
-    }
+    window.addEventListener('load', function(){
+	  if(document.getElementById('etct_result') != null)
+	  {
+        i_etctApi.m_ShowVehicleCallback = function(f_Response){
+          i_emotionResponseHandler.m_lastCar = f_Response;
+          i_emotionResponseHandler.fillVehicleProperties();
+        }
+	    i_emotionResponseHandler.init();
+		if(window.location.pathname.indexOf('/detail.htm') != -1)
+		{
+			window.addEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
+		}
+	  } else {
+        i_etctApi.m_ShowVehicleCallback = function(f_Response){
+		  window.location.href = 'detail.htm?' + 
+		  i_etctApi.m_DD_Make.getAttribute('name') + '=' + i_etctApi.m_DD_Make.childNodes[i_etctApi.m_DD_Make.selectedIndex].value + '&' +
+		  i_etctApi.m_DD_Model.getAttribute('name') + '=' + i_etctApi.m_DD_Model.childNodes[i_etctApi.m_DD_Model.selectedIndex].value + '&' +
+		  i_etctApi.m_DD_Variant.getAttribute('name') + '=' + i_etctApi.m_DD_Variant.childNodes[i_etctApi.m_DD_Variant.selectedIndex].value + '&' +
+		  i_etctApi.m_DD_Fuel.getAttribute('name') + '=' + i_etctApi.m_DD_Fuel.childNodes[i_etctApi.m_DD_Fuel.selectedIndex].value +
+	  	  '#etct_result';
+		}
+  	  }
+	}, false);
   }
 }

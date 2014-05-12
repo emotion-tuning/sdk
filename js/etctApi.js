@@ -14,6 +14,20 @@
  * @version    Git: $Id$
  * @link       https://www.emotion-tuning.com
  */
+
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+(function () {
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   };
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+})();
   
 var i_etctApi;
  
@@ -27,6 +41,8 @@ function etctApi()
   this.m_Form = null;
   this.m_ShowVehicleCallback = null;
   this.m_Lbl = new Array('- Please select -', '- Please select above -', 'Please <a href="http://browsehappy.com/">upgrade your browser</a>.')
+  this.m_DD_LastLoaded = null;
+  this.m_DD_defaults = {};
   
   this.init = function() 
   {
@@ -59,6 +75,7 @@ function etctApi()
         l_Config[l_i] = f_Config[l_i];
       }
     }
+	
     if(l_Config.data == null)
     {
       l_Config.data = new FormData(this.m_Form);
@@ -88,6 +105,7 @@ function etctApi()
         if(l_Config.dropdown != null)
         {
           l_owner._fillDD(l_Response, l_Config.dropdown);
+		  l_owner._preselectOption(l_Config.dropdown);
         }
       } else if(l_Response.ErrorMessage != null) {
         l_Error = document.createElement('p');
@@ -124,6 +142,12 @@ function etctApi()
     this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
     this.m_Form.addEventListener('submit', this._EvtDisp, false);
     
+	// save default options from the url
+	this._parseDefaultOption(this.m_DD_Make);
+	this._parseDefaultOption(this.m_DD_Model);
+	this._parseDefaultOption(this.m_DD_Fuel);
+	this._parseDefaultOption(this.m_DD_Variant);
+	
     // initial labels
     this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
     this.m_DD_Model.childNodes[0].innerHTML = this.m_Lbl[1];
@@ -140,7 +164,12 @@ function etctApi()
       method : f_Dropdown.getAttribute('data-method'), 
       dropdown:f_Dropdown, 
       onBefore: function(){f_Dropdown.setAttribute('disabled', true);}, 
-      callback: function(){f_Dropdown.removeAttribute('disabled');} 
+      callback: function(){
+	    f_Dropdown.removeAttribute('disabled'); 
+		i_etctApi.m_DD_LastLoaded = f_Dropdown;
+	    var l_event = new CustomEvent('etct_method_loaded', { bubbles: true } );
+        window.dispatchEvent(l_event);
+	  } 
     });
   }
   
@@ -150,7 +179,10 @@ function etctApi()
     this.exe({
       method : 'vehicle',  
       onBefore: function(){l_Caller.m_Submit.setAttribute('disabled', true);}, 
-      callback: function(f_Response){l_Caller.m_Submit.removeAttribute('disabled'); l_Caller.m_ShowVehicleCallback(f_Response);}
+      callback: function(f_Response){
+	    l_Caller.m_Submit.removeAttribute('disabled'); 
+		l_Caller.m_ShowVehicleCallback(f_Response);
+	  }
     });
     f_Event.preventDefault();
   }
@@ -235,6 +267,44 @@ function etctApi()
   {
     l_test = /msie.[0-9]/.test(window.navigator.userAgent.toLowerCase());
     return typeof(l_test) != 'undefined' ? l_test : false;
+  }
+  
+  this._preselectOption = function(f_Dropdown)
+  {
+	var l_DefaultValue = this.m_DD_defaults[f_Dropdown.getAttribute('name')];
+	if(typeof(l_DefaultValue) != 'undefined')
+	{
+	  for(l_i in f_Dropdown.childNodes)
+	  {
+		if(f_Dropdown.childNodes[l_i].value == l_DefaultValue)
+		{
+		  f_Dropdown.childNodes[l_i].setAttribute('selected', true);
+		  break;
+		}
+	  }
+	  setTimeout(function(){
+	    var event = new CustomEvent('change', { bubbles: true } );
+        f_Dropdown.dispatchEvent(event);
+	  }, 10);
+	}
+	delete this.m_DD_defaults[f_Dropdown.getAttribute('name')];
+  }
+  
+  this._parseDefaultOption = function(f_Dropdown)
+  {
+    if(window.location.href.indexOf(f_Dropdown.getAttribute('name')) != -1)
+	{
+	  var l_params = window.location.search.substr(1).split('&');
+	  for(l_i in l_params)
+	  {
+		var l_pair = l_params[l_i].split('=');
+		if(l_pair[0] == f_Dropdown.getAttribute('name'))
+		{
+		  this.m_DD_defaults[f_Dropdown.getAttribute('name')] = l_pair[1];
+		  break;
+		}
+	  }
+	}
   }
 }
  
