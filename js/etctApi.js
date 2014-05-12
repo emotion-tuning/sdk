@@ -96,7 +96,7 @@ function etctApi()
       if(l_xhr.readyState != 4) return;
       if(l_xhr.status != 200 && l_xhr.status != 304)
       {
-        l_owner.msg('Error ' + l_xhr.status);
+        i_etctApi.msg('Error ' + l_xhr.status);
         return;
       }
       l_Response = JSON.parse(l_xhr.responseText);
@@ -104,14 +104,13 @@ function etctApi()
       {
         if(l_Config.dropdown != null)
         {
-          l_owner._fillDD(l_Response, l_Config.dropdown);
-		  l_owner._preselectOption(l_Config.dropdown);
+          try { i_etctApi._fillDD(l_Response, l_Config.dropdown); } catch(e) { i_etctApi.msg(e); }
         }
       } else if(l_Response.ErrorMessage != null) {
         l_Error = document.createElement('p');
         l_Error.innerHTML = l_Response.ErrorMessage;
         l_Error.className = 'etError';
-        l_owner.m_Form.appendChild(l_Error);
+        i_etctApi.m_Form.appendChild(l_Error);
       }
       if(l_Config.callback != null)
       {
@@ -163,8 +162,8 @@ function etctApi()
     this.exe({
       method : f_Dropdown.getAttribute('data-method'), 
       dropdown:f_Dropdown, 
-      onBefore: function(){f_Dropdown.setAttribute('disabled', true);}, 
-      callback: function(){
+      onBefore: function(){ f_Dropdown.setAttribute('disabled', true);}, 
+      callback: function(){ 
 	    f_Dropdown.removeAttribute('disabled'); 
 		i_etctApi.m_DD_LastLoaded = f_Dropdown;
 	    var l_event = new CustomEvent('etct_method_loaded', { bubbles: true } );
@@ -254,13 +253,14 @@ function etctApi()
     {
       f_Dropdown.removeChild(f_Dropdown.firstChild);
     }
-    for(l_i in f_Response.Items)
+	for(l_i in f_Response.Items)
     {
       l_Option = document.createElement('option');
       l_Option.value = f_Response.Items[l_i].Value;
       l_Option.innerHTML = f_Response.Items[l_i].Text;
       f_Dropdown.appendChild(l_Option);
     }
+	this._preselectOption(f_Dropdown);
   }
   
   this._ltIE9 = function()
