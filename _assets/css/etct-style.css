@@ -50,3 +50,12 @@
 .etRequired {
   color:#f00;
 }
+.bigContainer .etWidget, .bigContainer .etResult, .bigContainer .etRequestQuote {
+  box-shadow:0px 5px 15px rgba(0,0,0,.15);
+}
+.etResult table {
+  border:1px solid #ccc;
+}
+.carDetails {
+  font-size:1.2em;
+}

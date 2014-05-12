@@ -1,6 +1,6 @@
 /* comment this CSS rule to show the car details template for styling purposes */
 .etResult, .etStage, .etRequestQuote {
-  display:none; 
+  display:none;
 }
 .etWidget select, .etWidget label, .etRequestQuote label, .etRequestQuote select, .etRequestQuote .etFullWidth {
   display:block;
@@ -46,4 +46,30 @@
 }
 .etError, .etNotice {
   padding:5px 10px;
+}
+.etImg {
+  margin-right:10px;
+  margin-bottom:5px;
+}
+.carDetails {
+  margin-bottom:30px;
+}
+.etStageTabs {
+  margin:0px;
+  padding:0px;
+}
+.etStageTabs li {
+  float:left;
+  display:block;
+  padding:5px 10px;
+  background-color:#efefef;
+  margin-right:5px;
+}
+.etStageTabs li.on {
+  border:1px solid #ccc;
+  border-bottom:none;
+  background-color:#fff;
+  margin-bottom:-1px;
+  position:relative;
+  z-index:100;
 }

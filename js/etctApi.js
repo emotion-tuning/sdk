@@ -75,7 +75,7 @@ function etctApi()
         l_Config[l_i] = f_Config[l_i];
       }
     }
-	
+    
     if(l_Config.data == null)
     {
       l_Config.data = new FormData(this.m_Form);
@@ -141,12 +141,12 @@ function etctApi()
     this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
     this.m_Form.addEventListener('submit', this._EvtDisp, false);
     
-	// save default options from the url
-	this._parseDefaultOption(this.m_DD_Make);
-	this._parseDefaultOption(this.m_DD_Model);
-	this._parseDefaultOption(this.m_DD_Fuel);
-	this._parseDefaultOption(this.m_DD_Variant);
-	
+    // save default options from the url
+    this._parseDefaultOption(this.m_DD_Make);
+    this._parseDefaultOption(this.m_DD_Model);
+    this._parseDefaultOption(this.m_DD_Fuel);
+    this._parseDefaultOption(this.m_DD_Variant);
+    
     // initial labels
     this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
     this.m_DD_Model.childNodes[0].innerHTML = this.m_Lbl[1];
@@ -164,11 +164,11 @@ function etctApi()
       dropdown:f_Dropdown, 
       onBefore: function(){ f_Dropdown.setAttribute('disabled', true);}, 
       callback: function(){ 
-	    f_Dropdown.removeAttribute('disabled'); 
-		i_etctApi.m_DD_LastLoaded = f_Dropdown;
-	    var l_event = new CustomEvent('etct_method_loaded', { bubbles: true } );
+        f_Dropdown.removeAttribute('disabled'); 
+        i_etctApi.m_DD_LastLoaded = f_Dropdown;
+        var l_event = new CustomEvent('etct_method_loaded', { bubbles: true } );
         window.dispatchEvent(l_event);
-	  } 
+      } 
     });
   }
   
@@ -179,9 +179,9 @@ function etctApi()
       method : 'vehicle',  
       onBefore: function(){l_Caller.m_Submit.setAttribute('disabled', true);}, 
       callback: function(f_Response){
-	    l_Caller.m_Submit.removeAttribute('disabled'); 
-		l_Caller.m_ShowVehicleCallback(f_Response);
-	  }
+        l_Caller.m_Submit.removeAttribute('disabled'); 
+        l_Caller.m_ShowVehicleCallback(f_Response);
+      }
     });
     f_Event.preventDefault();
   }
@@ -253,14 +253,14 @@ function etctApi()
     {
       f_Dropdown.removeChild(f_Dropdown.firstChild);
     }
-	for(l_i in f_Response.Items)
+    for(l_i in f_Response.Items)
     {
       l_Option = document.createElement('option');
       l_Option.value = f_Response.Items[l_i].Value;
       l_Option.innerHTML = f_Response.Items[l_i].Text;
       f_Dropdown.appendChild(l_Option);
     }
-	this._preselectOption(f_Dropdown);
+    this._preselectOption(f_Dropdown);
   }
   
   this._ltIE9 = function()
@@ -271,40 +271,40 @@ function etctApi()
   
   this._preselectOption = function(f_Dropdown)
   {
-	var l_DefaultValue = this.m_DD_defaults[f_Dropdown.getAttribute('name')];
-	if(typeof(l_DefaultValue) != 'undefined')
-	{
-	  for(l_i in f_Dropdown.childNodes)
-	  {
-		if(f_Dropdown.childNodes[l_i].value == l_DefaultValue)
-		{
-		  f_Dropdown.childNodes[l_i].setAttribute('selected', true);
-		  break;
-		}
-	  }
-	  setTimeout(function(){
-	    var event = new CustomEvent('change', { bubbles: true } );
+    var l_DefaultValue = this.m_DD_defaults[f_Dropdown.getAttribute('name')];
+    if(typeof(l_DefaultValue) != 'undefined')
+    {
+      for(l_i in f_Dropdown.childNodes)
+      {
+        if(f_Dropdown.childNodes[l_i].value == l_DefaultValue)
+        {
+          f_Dropdown.childNodes[l_i].setAttribute('selected', true);
+          break;
+        }
+      }
+      setTimeout(function(){
+        var event = new CustomEvent('change', { bubbles: true } );
         f_Dropdown.dispatchEvent(event);
-	  }, 100);
-	}
-	delete this.m_DD_defaults[f_Dropdown.getAttribute('name')];
+      }, 100);
+    }
+    delete this.m_DD_defaults[f_Dropdown.getAttribute('name')];
   }
   
   this._parseDefaultOption = function(f_Dropdown)
   {
     if(window.location.href.indexOf(f_Dropdown.getAttribute('name')) != -1)
-	{
-	  var l_params = window.location.search.substr(1).split('&');
-	  for(l_i in l_params)
-	  {
-		var l_pair = l_params[l_i].split('=');
-		if(l_pair[0] == f_Dropdown.getAttribute('name'))
-		{
-		  this.m_DD_defaults[f_Dropdown.getAttribute('name')] = l_pair[1];
-		  break;
-		}
-	  }
-	}
+    {
+      var l_params = window.location.search.substr(1).split('&');
+      for(l_i in l_params)
+      {
+        var l_pair = l_params[l_i].split('=');
+        if(l_pair[0] == f_Dropdown.getAttribute('name'))
+        {
+          this.m_DD_defaults[f_Dropdown.getAttribute('name')] = l_pair[1];
+          break;
+        }
+      }
+    }
   }
 }
  

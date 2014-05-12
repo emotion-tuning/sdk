@@ -23,10 +23,10 @@ function emotionResponseHandler()
   {
     if(i_etctApi.m_DD_LastLoaded == i_etctApi.m_DD_Variant)
     {
-	  setTimeout(function(){
-  	    i_etctApi.ShowVehicle(f_Event);
+      setTimeout(function(){
+        i_etctApi.ShowVehicle(f_Event);
         window.removeEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
-	  }, 100);
+      }, 100);
     }
   }
   
@@ -85,6 +85,11 @@ function emotionResponseHandler()
     {
       l_TS.removeChild(l_TS.firstChild);
     }
+    var l_TSTab = document.getElementById('etct_stageTabs');
+    while (l_TSTab.firstChild)
+    {
+      l_TSTab.removeChild(l_TSTab.firstChild);
+    }
     
     for(key in this.m_lastCar)
     {
@@ -129,18 +134,26 @@ function emotionResponseHandler()
             {
               var l_stageTemplate = document.getElementById('etct_template_stage').cloneNode(true);
               l_stageTemplate.removeAttribute('id');
-              l_stageTemplate.style.display = 'block';
+              var l_stageTabTemplate =  document.getElementById('etct_template_stageTab').cloneNode(true);
+              l_stageTabTemplate.removeAttribute('id');
+              l_stageTabTemplate.style.display = 'block';
+              
               for(l_ts_key in this.m_lastCar[key][l_i])
               {
                 if(l_ts_key == 'TuningStageId')
                 {
-                  l_stageTemplate.querySelector('.etct_TuningStageId').value = this.m_lastCar[key][l_i][l_ts_key];  
+                  l_stageTabTemplate.querySelector('.etct_TuningStageId').value = this.m_lastCar[key][l_i][l_ts_key];  
                 } else {
                   // set the value to a placeholder, if such placeholder is found  
                   var l_ts_placeholder = l_stageTemplate.querySelector('.etct_' + l_ts_key);
                   if(l_ts_placeholder != null)
                   {
                     l_ts_placeholder.innerHTML = this.m_lastCar[key][l_i][l_ts_key];
+                  }
+                  var l_tsTab_placeholder = l_stageTabTemplate.querySelector('.etct_' + l_ts_key);
+                  if(l_tsTab_placeholder != null)
+                  {
+                    l_tsTab_placeholder.innerHTML = this.m_lastCar[key][l_i][l_ts_key];
                   }
                 }
                 
@@ -149,7 +162,9 @@ function emotionResponseHandler()
                 {
                   if(l_ts_key == 'DefaultStage' && this.m_lastCar[key][l_i][l_ts_key])
                   {
-                    l_stageTemplate.querySelector('.etct_StageSelector').setAttribute('checked', true);  
+                    l_stageTabTemplate.querySelector('.etct_StageSelector').setAttribute('checked', true);  
+                    l_stageTabTemplate.className = 'on';
+                    l_stageTemplate.style.display = 'block';
                   }
                 }
                 
@@ -164,6 +179,37 @@ function emotionResponseHandler()
                 }
               }
               document.getElementById('etct_TuningStages').appendChild(l_stageTemplate);
+              l_stageTabTemplate.addEventListener('change', function(f_Event){
+                var l_currentIndex = 0;
+                for(l_i in f_Event.target.parentNode.parentNode.childNodes)
+                {
+                  if(f_Event.target.parentNode.parentNode.childNodes[l_i] == f_Event.target.parentNode)
+                  {
+                    break;
+                  }
+                  l_currentIndex++;
+                }
+                
+                var l_tabs = document.getElementById('etct_stageTabs').childNodes;
+                for(l_i in l_tabs)
+                {
+                  l_tabs[l_i].className = '';
+                }
+                f_Event.target.parentNode.className = 'on';
+                
+                
+                var l_stageDetails1 = document.getElementById('etct_TuningStages').childNodes;
+                for(l_i1 in l_stageDetails1)
+                {
+                  if(typeof(l_stageDetails1[l_i1]) == 'object')
+                  {
+                    l_stageDetails1[l_i1].style.display = 'none';
+                  }
+                }
+                document.getElementById('etct_TuningStages').childNodes[l_currentIndex].style.display = 'block';
+                f_Event.preventDefault();
+              });
+              document.getElementById('etct_stageTabs').appendChild(l_stageTabTemplate);
             }
           }
         }
@@ -201,27 +247,27 @@ if(typeof(i_etctApi) != 'undefined')
   if(!i_etctApi._ltIE9())
   {
     window.addEventListener('load', function(){
-	  if(document.getElementById('etct_result') != null)
-	  {
+      if(document.getElementById('etct_result') != null)
+      {
         i_etctApi.m_ShowVehicleCallback = function(f_Response){
           i_emotionResponseHandler.m_lastCar = f_Response;
           i_emotionResponseHandler.fillVehicleProperties();
         }
-	    i_emotionResponseHandler.init();
-		if(window.location.pathname.indexOf('/detail.htm') != -1)
-		{
-			window.addEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
-		}
-	  } else {
+        i_emotionResponseHandler.init();
+        if(window.location.pathname.indexOf('/detail.htm') != -1)
+        {
+            window.addEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
+        }
+      } else {
         i_etctApi.m_ShowVehicleCallback = function(f_Response){
-		  window.location.href = 'detail.htm?' + 
-		  i_etctApi.m_DD_Make.getAttribute('name') + '=' + i_etctApi.m_DD_Make.childNodes[i_etctApi.m_DD_Make.selectedIndex].value + '&' +
-		  i_etctApi.m_DD_Model.getAttribute('name') + '=' + i_etctApi.m_DD_Model.childNodes[i_etctApi.m_DD_Model.selectedIndex].value + '&' +
-		  i_etctApi.m_DD_Variant.getAttribute('name') + '=' + i_etctApi.m_DD_Variant.childNodes[i_etctApi.m_DD_Variant.selectedIndex].value + '&' +
-		  i_etctApi.m_DD_Fuel.getAttribute('name') + '=' + i_etctApi.m_DD_Fuel.childNodes[i_etctApi.m_DD_Fuel.selectedIndex].value +
-	  	  '#etct_result';
-		}
-  	  }
-	}, false);
+          window.location.href = 'detail.htm?' + 
+          i_etctApi.m_DD_Make.getAttribute('name') + '=' + i_etctApi.m_DD_Make.childNodes[i_etctApi.m_DD_Make.selectedIndex].value + '&' +
+          i_etctApi.m_DD_Model.getAttribute('name') + '=' + i_etctApi.m_DD_Model.childNodes[i_etctApi.m_DD_Model.selectedIndex].value + '&' +
+          i_etctApi.m_DD_Variant.getAttribute('name') + '=' + i_etctApi.m_DD_Variant.childNodes[i_etctApi.m_DD_Variant.selectedIndex].value + '&' +
+          i_etctApi.m_DD_Fuel.getAttribute('name') + '=' + i_etctApi.m_DD_Fuel.childNodes[i_etctApi.m_DD_Fuel.selectedIndex].value +
+          '#etct_result';
+        }
+      }
+    }, false);
   }
 }
