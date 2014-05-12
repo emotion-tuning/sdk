@@ -17,7 +17,7 @@ The general SDK for Celtic/Emotion tuning's car search API.
 - Check requirements. Does your server support _PHP_? 
   > If not, you need to have a "proxy" script (that mimicks **PHP/json.channel.php**) developed in your server's technology and update that script's url in **js/emotionApi.min.js**.
    
-1. #### **index.htm**
+1. #### **index.htm** (= Demo 1)
    1. Open this file in any code editor
    2. Copy lines between
 
