@@ -1,6 +1,6 @@
 <?php
   define('ETCT_API_ENDPOINT', 'http://celtictuningapi.co.uk');
-  define('ETCT_API_KEY', 'INSERT_API_KEY_HERE');
+  define('ETCT_API_KEY', 'ce4e71de-6906-e211-abb8-2c41385cad6e');
   define('DEALER_EMAIL', NULL);
   
   if(isset($_REQUEST['etct_method']))

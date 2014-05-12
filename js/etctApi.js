@@ -100,6 +100,10 @@ function etctApi()
         return;
       }
       l_Response = JSON.parse(l_xhr.responseText);
+      if(l_Config.callback != null)
+      {
+        try { l_Config.callback(l_Response); } catch(e) { i_etctApi.msg(e); }
+      }
       if(l_Response.Success)
       {
         if(l_Config.dropdown != null)
@@ -111,10 +115,6 @@ function etctApi()
         l_Error.innerHTML = l_Response.ErrorMessage;
         l_Error.className = 'etError';
         i_etctApi.m_Form.appendChild(l_Error);
-      }
-      if(l_Config.callback != null)
-      {
-        l_Config.callback(l_Response);
       }
     }
     l_xhr.open('POST', 'PHP/json.channel.php', true);
@@ -285,7 +285,7 @@ function etctApi()
 	  setTimeout(function(){
 	    var event = new CustomEvent('change', { bubbles: true } );
         f_Dropdown.dispatchEvent(event);
-	  }, 10);
+	  }, 100);
 	}
 	delete this.m_DD_defaults[f_Dropdown.getAttribute('name')];
   }

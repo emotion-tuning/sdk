@@ -23,8 +23,10 @@ function emotionResponseHandler()
   {
     if(i_etctApi.m_DD_LastLoaded == i_etctApi.m_DD_Variant)
     {
-  	  i_etctApi.ShowVehicle(f_Event);
-      window.removeEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
+	  setTimeout(function(){
+  	    i_etctApi.ShowVehicle(f_Event);
+        window.removeEventListener('etct_method_loaded', i_emotionResponseHandler.autoload);
+	  }, 100);
     }
   }
   
