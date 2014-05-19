@@ -39,28 +39,45 @@ function etctApi()
   this.m_DD_Fuel = null;
   this.m_Submit = null;
   this.m_Form = null;
+  this.m_OnSubmit = null;
+  this.m_OnBeforeMakeChange = null;
+  this.m_OnBeforeModelChange = null;
+  this.m_OnBeforeFuelChange = null;
   this.m_ShowVehicleCallback = null;
+  this.m_AllLoadedCallback = null;
   this.m_Lbl = new Array('- Please select -', '- Please select above -', 'Please <a href="http://browsehappy.com/">upgrade your browser</a>.')
   this.m_DD_LastLoaded = null;
   this.m_DD_defaults = {};
+  this.m_EventListenersAdded = false;
+  this.m_xhr = null;
   
   this.init = function() 
   {
+    var thisObj = this;
     if (!this._ltIE9())
     {
-      window.addEventListener('load', this._OnDocLoad, false);
+      window.addEventListener('load', function(){thisObj._init();}, false);
     } else {
       window.attachEvent('onload', function(){
         l_OldIENotSupported = document.createElement('p');
-        l_OldIENotSupported.innerHTML = i_etctApi.m_Lbl[2];
+        l_OldIENotSupported.innerHTML = thisObj.m_Lbl[2];
         l_OldIENotSupported.className = 'etError';
         document.getElementById('etct_form').appendChild(l_OldIENotSupported);
       });
     }
   }
   
+  this.cancelXhr = function()
+  {
+    if(this.m_xhr != null)
+    {
+      this.m_xhr.abort();
+    }
+  }
+  
   this.exe = function(f_Config)
   {
+    var thisObj = this;
     var l_Config = {
       method : null,
       dropdown: null,
@@ -80,7 +97,7 @@ function etctApi()
     {
       l_Config.data = new FormData(this.m_Form);
     }
-    var l_xhr = null;
+    
     var l_owner = this;
     var l_Data = l_Config.data;
     
@@ -91,61 +108,88 @@ function etctApi()
       l_Config.onBefore();
     }
     
-    l_xhr = new XMLHttpRequest();
-    l_xhr.onreadystatechange = function() {
-      if(l_xhr.readyState != 4) return;
-      if(l_xhr.status != 200 && l_xhr.status != 304)
+    this.m_xhr = new XMLHttpRequest();
+    this.m_xhr.onreadystatechange = function() {
+      if(thisObj.m_xhr.readyState != 4) return;
+      if(thisObj.m_xhr.status != 200 && thisObj.m_xhr.status != 304)
       {
-        i_etctApi.msg('Error ' + l_xhr.status);
+        thisObj.msg('Error ' + thisObj.m_xhr.status);
         return;
       }
-      l_Response = JSON.parse(l_xhr.responseText);
+      l_Response = JSON.parse(thisObj.m_xhr.responseText);
       if(l_Config.callback != null)
       {
-        try { l_Config.callback(l_Response); } catch(e) { i_etctApi.msg(e); }
+        if(l_Config.callback != null){ 
+          try { l_Config.callback(l_Response); } catch(e) { thisObj.msg(e); }
+       }
       }
       if(l_Response.Success)
       {
         if(l_Config.dropdown != null)
         {
-          try { i_etctApi._fillDD(l_Response, l_Config.dropdown); } catch(e) { i_etctApi.msg(e); }
+          try { thisObj._fillDD(l_Response, l_Config.dropdown); } catch(e) { thisObj.msg(e); }
         }
       } else if(l_Response.ErrorMessage != null) {
         l_Error = document.createElement('p');
         l_Error.innerHTML = l_Response.ErrorMessage;
         l_Error.className = 'etError';
-        i_etctApi.m_Form.appendChild(l_Error);
+        thisObj.m_Form.appendChild(l_Error);
+      }
+      thisObj.m_xhr = null;
+    }
+    this.m_xhr.open('POST', 'PHP/json.channel.php', true);
+    this.m_xhr.send(l_Data);
+  }
+  
+  this._init = function(f_Config)
+  {
+    var thisObj = this;
+    var l_Config = {
+      DD_Make: document.getElementById('etct_make'),
+      DD_Model: document.getElementById('etct_model'),
+      DD_Fuel: document.getElementById('etct_fuel'),
+      DD_Variant: document.getElementById('etct_variant'),
+      Submit: document.getElementById('etct_submit'),
+      Form: document.getElementById('etct_form'),
+      _Defaults: null
+    }
+    if(typeof(f_Config) != 'undefined')
+    {
+      for(l_Key in l_Config)
+      {
+        if(typeof(f_Config[l_Key]) != 'undefined')
+        {
+          l_Config[l_Key] = f_Config[l_Key];
+        }
       }
     }
-    l_xhr.open('POST', 'PHP/json.channel.php', true);
-    l_xhr.send(l_Data);
-  }
-  
-  this._OnDocLoad = function(f_Event)
-  {
-    i_etctApi._init();
-  }
-  
-  this._init = function()
-  {
-    this.m_DD_Make = document.getElementById('etct_make');
-    this.m_DD_Model = document.getElementById('etct_model');
-    this.m_DD_Fuel = document.getElementById('etct_fuel');
-    this.m_DD_Variant = document.getElementById('etct_variant');
-    this.m_Submit = document.getElementById('etct_submit');
-    this.m_Form = document.getElementById('etct_form');
-    
-    this.m_DD_Make.addEventListener('change', this._EvtDisp, false);
-    this.m_DD_Model.addEventListener('change', this._EvtDisp, false);
-    this.m_DD_Fuel.addEventListener('change', this._EvtDisp, false);
-    this.m_DD_Variant.addEventListener('change', this._EvtDisp, false);
-    this.m_Form.addEventListener('submit', this._EvtDisp, false);
+    this.m_DD_Make = l_Config.DD_Make;
+    this.m_DD_Model = l_Config.DD_Model;
+    this.m_DD_Fuel = l_Config.DD_Fuel;
+    this.m_DD_Variant = l_Config.DD_Variant;
+    this.m_Submit = l_Config.Submit;
+    this.m_Form = l_Config.Form;
     
     // save default options from the url
-    this._parseDefaultOption(this.m_DD_Make);
-    this._parseDefaultOption(this.m_DD_Model);
-    this._parseDefaultOption(this.m_DD_Fuel);
-    this._parseDefaultOption(this.m_DD_Variant);
+    if(l_Config._Defaults == null)
+    {
+      this._parseDefaultOption(this.m_DD_Make);
+      this._parseDefaultOption(this.m_DD_Model);
+      this._parseDefaultOption(this.m_DD_Fuel);
+      this._parseDefaultOption(this.m_DD_Variant);
+    } else {
+      this.m_DD_defaults = l_Config._Defaults;
+    }
+    
+    if(!this.m_EventListenersAdded)
+    {
+      this.m_DD_Make.addEventListener('change', function(f_Event){thisObj._EvtDisp(f_Event);}, false);
+      this.m_DD_Model.addEventListener('change', function(f_Event){thisObj._EvtDisp(f_Event);}, false);
+      this.m_DD_Fuel.addEventListener('change', function(f_Event){thisObj._EvtDisp(f_Event);}, false);
+      this.m_DD_Variant.addEventListener('change', function(f_Event){thisObj._EvtDisp(f_Event);}, false);
+      this.m_Form.addEventListener('submit', function(f_Event){ thisObj._EvtDisp(f_Event);}, false);
+      this.m_EventListenersAdded = true;
+    }
     
     // initial labels
     this.m_DD_Make.childNodes[0].innerHTML = this.m_Lbl[0];
@@ -153,21 +197,20 @@ function etctApi()
     this.m_DD_Fuel.childNodes[0].innerHTML = this.m_Lbl[1];
     this.m_DD_Variant.childNodes[0].innerHTML = this.m_Lbl[1];
     
-    this.Load(this.m_DD_Make);
+    this.Load(this.m_DD_Make, function(){thisObj.m_DD_Model.setAttribute('disabled', 1);});
   }
   
   this.Load = function(f_Dropdown)
   {
+    var thisObj = this;
     this.m_Submit.setAttribute('disabled', 1);
     this.exe({
       method : f_Dropdown.getAttribute('data-method'), 
       dropdown:f_Dropdown, 
       onBefore: function(){ f_Dropdown.setAttribute('disabled', true);}, 
-      callback: function(){ 
+      callback: function(f_Response){ 
         f_Dropdown.removeAttribute('disabled'); 
-        i_etctApi.m_DD_LastLoaded = f_Dropdown;
-        var l_event = new CustomEvent('etct_method_loaded', { bubbles: true } );
-        window.dispatchEvent(l_event);
+        thisObj.m_DD_LastLoaded = f_Dropdown;
       } 
     });
   }
@@ -180,15 +223,32 @@ function etctApi()
       onBefore: function(){l_Caller.m_Submit.setAttribute('disabled', true);}, 
       callback: function(f_Response){
         l_Caller.m_Submit.removeAttribute('disabled'); 
-        l_Caller.m_ShowVehicleCallback(f_Response);
+        if(l_Caller.m_ShowVehicleCallback != null)
+        {
+          try{ l_Caller.m_ShowVehicleCallback(f_Response); } catch(e) {l_Caller.msg(e);}
+        }
       }
     });
-    f_Event.preventDefault();
+    if(typeof(f_Event) != 'undefined')
+    {
+      f_Event.preventDefault();
+    }
   }
   
   this.OnMakeChange = function()
   {
-    this.Load(this.m_DD_Model);
+    var thisObj = this;
+    if(this.m_DD_Make.selectedIndex != 0)
+    {
+      if(this.m_OnBeforeMakeChange != null)
+      {
+        try{ this.m_OnBeforeMakeChange(); } catch(e) {this.msg(e);}
+      }
+      this.Load(this.m_DD_Model);
+    } else {
+      this.m_DD_Model.selectedIndex = 0;
+      this.m_DD_Model.setAttribute('disabled', 1);
+    }
     this.m_DD_Fuel.selectedIndex = 0;
     this.m_DD_Fuel.setAttribute('disabled', 1);
     this.m_DD_Variant.selectedIndex = 0;
@@ -197,14 +257,35 @@ function etctApi()
   
   this.OnModelChange = function()
   {
-    this.Load(this.m_DD_Fuel);
+    var thisObj = this;
+    if(this.m_DD_Model.selectedIndex != 0)
+    {
+      if(this.m_OnBeforeModelChange != null)
+      {
+        try{ this.m_OnBeforeModelChange(); } catch(e) {this.msg(e);}
+      }
+      this.Load(this.m_DD_Fuel);
+    } else {
+      this.m_DD_Fuel.selectedIndex = 0;
+      this.m_DD_Fuel.setAttribute('disabled', 1);
+    }
     this.m_DD_Variant.selectedIndex = 0;
     this.m_DD_Variant.setAttribute('disabled', 1);
   }
   
   this.OnFuelChange = function()
   {
-    this.Load(this.m_DD_Variant);
+    if(this.m_DD_Fuel.selectedIndex != 0)
+    {
+      if(this.m_OnBeforeFuelChange != null)
+      {
+        try{ this.m_OnBeforeFuelChange(); } catch(e) {this.msg(e);}
+      }
+      this.Load(this.m_DD_Variant);
+    } else {
+      this.m_DD_Variant.selectedIndex = 0;
+      this.m_DD_Variant.setAttribute('disabled', 1);
+    }
   }
   
   this.OnVariantChange = function()
@@ -212,32 +293,41 @@ function etctApi()
     if(this.m_DD_Variant.childNodes[this.m_DD_Variant.selectedIndex].value != '-1')
     {
       this.m_Submit.removeAttribute('disabled');
+      if(this.m_AllLoadedCallback != null)
+      {
+        try{ this.m_AllLoadedCallback(); } catch(e) {this.msg(e);}
+      }
     } else {
-      this.m_Submit.setAttribute('disabled', 1);
+       this.m_Submit.setAttribute('disabled', 1);
     }
   }
   
   this._EvtDisp = function(f_Event)
   {
-    if(f_Event.target == i_etctApi.m_DD_Make)
+    if(f_Event.target == this.m_DD_Make)
     {
-      i_etctApi.OnMakeChange(f_Event);
+      this.OnMakeChange(f_Event);
     }
-    if(f_Event.target == i_etctApi.m_DD_Model)
+    if(f_Event.target == this.m_DD_Model)
     {
-      i_etctApi.OnModelChange(f_Event);
+      this.OnModelChange(f_Event);
     }
-    if(f_Event.target == i_etctApi.m_DD_Fuel)
+    if(f_Event.target == this.m_DD_Fuel)
     {
-      i_etctApi.OnFuelChange(f_Event);
+      this.OnFuelChange(f_Event);
     }
-    if(f_Event.target == i_etctApi.m_DD_Variant)
+    if(f_Event.target == this.m_DD_Variant)
     {
-      i_etctApi.OnVariantChange(f_Event);
+      this.OnVariantChange(f_Event);
     }
-    if(f_Event.target == i_etctApi.m_Form)
+    if(f_Event.target == this.m_Form)
     {
-      i_etctApi.ShowVehicle(f_Event);
+      if(this.m_OnSubmit == null)
+      {
+        this.ShowVehicle(f_Event);
+      } else {
+        this.m_OnSubmit(f_Event);
+      }
     }
   }
   

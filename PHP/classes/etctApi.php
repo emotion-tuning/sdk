@@ -60,7 +60,7 @@
         'Content-Type: application/json',
         'Content-Length: ' . strlen($f_jsonData))
       );
-      error_log("\r\n".$this->m_endpoint . $this->m_lastMethod . '?'.http_build_query(json_decode($f_jsonData)), 3, 'log.log');
+      error_log("\r\n".$this->m_endpoint . $this->m_lastMethod . '?'.http_build_query(json_decode($f_jsonData))."\r\n", 3, 'log.log');
 
       if(!$l_result = curl_exec($l_ch))
       {

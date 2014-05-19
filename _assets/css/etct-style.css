@@ -1,6 +1,10 @@
 .etWidget header {
   background-color:#000;
 }
+.etStages a, .etStageTabs a {
+  color:#00B3FF;
+  text-decoration:none;
+}
 .etWidget, .etResult, .etRequestQuote {
   background-color:#fff;
   border:1px solid #efefef;
@@ -25,7 +29,7 @@
   border-radius:5px;
   padding:5px 10px;
 }
-.etSubmitButton input {
+.etSubmitButton input, .etSubmitButton button {
   font-size:1.5em;
   font-weight:bold;
   padding:3px 10px;

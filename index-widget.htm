@@ -5,9 +5,8 @@
     <title>Celtic Tuning/Emotion Tuning Javascript SDK example</title>
     <link rel="stylesheet" href="_assets/css/etct-microsite.min.css" media="all">
     <!-- emotion dependencies start -->
-    <link rel="stylesheet" href="_assets/css/etct-base.css" media="all">
-    <link rel="stylesheet" href="_assets/css/etct-style.css" media="screen">
-    <script type="text/javascript" src="https://www.emotion-tuning.com/SDK/js/etctApi.min.js"></script>
+    <link rel="stylesheet" href="_assets/css/etct-base-and-style.min.css" media="screen">
+    <script type="text/javascript" src="js/etctApi.min.js"></script>
     <!-- emotion dependencies end -->
   </head>
   <body>
@@ -33,11 +32,15 @@
         </div>
       </div>
       <div class="etResult" id="etct_result">
-        <h2>
+        <h2 class="etLeft">
           <span id="etct_ModelAndPlatformName"></span>
         </h2>
-        <img src="_assets/img/placeholder.png" id="etct_VehicleModelImageUrl" width="auto" height="auto" alt="img" />
-        <p><span id="etct_CustomerNotes"></span></p>
+        <a href="#" class="etRight etClose" id="etct_close_result">
+          &times;
+        </a>
+        <div class="clearfix"></div>
+        <p><img src="_assets/img/placeholder.png" id="etct_VehicleModelImageUrl" width="auto" height="auto" alt="img" align="left" class="etImg" /><span id="etct_CustomerNotes"></span></p>
+        <div class="clearfix"></div>
         
         <h2>Vehicle stats</h2>
         <table class="etVehicleStats">
@@ -69,65 +72,59 @@
         <h2>
           Stages
         </h2>
+        <ul class="etStageTabs" id="etct_stageTabs"></ul>
+        <div class="clearfix"></div>
         <div class="etStage" id="etct_template_stage">
-          <div class="etStageSelector">
-            <input type="radio" class="etct_TuningStageId etct_StageSelector" name="TuningStageId">
-          </div>
-          <div class="etStageDesc">
-            <h3>
-              <span class="etct_TuningStageTitle">Stage title</span>
-            </h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Specs
-                  </th>
-                  <th>
-                    Original
-                  </th>
-                  <th>
-                    Modified
-                  </th>
-                  <th>
-                    +
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    Power (<span id="etct_StandardPowerUnit"></span>)
-                  </td>
-                  <td>
-                    <span id="etct_StandardPower"></span>
-                  </td>
-                  <td>
-                    <span class="etct_ModifiedPower"></span>
-                  </td>
-                  <td>
-                    <span class="etct_PowerGain"></span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    Torque (<span id="etct_StandardTorqueUnit"></span>)
-                  </td>
-                  <td>
-                    <span id="etct_StandardTorque"></span>
-                  </td>
-                  <td>
-                    <span class="etct_ModifiedTorque"></span>
-                  </td>
-                  <td>
-                    <span class="etct_TorqueGain"></span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  Specs
+                </th>
+                <th>
+                  Original
+                </th>
+                <th>
+                  Modified
+                </th>
+                <th>
+                  +
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Power (<span id="etct_StandardPowerUnit"></span>)
+                </td>
+                <td>
+                  <span id="etct_StandardPower"></span>
+                </td>
+                <td>
+                  <span class="etct_ModifiedPower"></span>
+                </td>
+                <td>
+                  <span class="etct_PowerGain"></span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Torque (<span id="etct_StandardTorqueUnit"></span>)
+                </td>
+                <td>
+                  <span id="etct_StandardTorque"></span>
+                </td>
+                <td>
+                  <span class="etct_ModifiedTorque"></span>
+                </td>
+                <td>
+                  <span class="etct_TorqueGain"></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div id="etct_TuningStages" class="etStages"></div>          
+        <div id="etct_TuningStages" class="etStages"></div>      
         <h2>
           Available Options
         </h2>
@@ -154,29 +151,59 @@
           <tbody>
             <tr>
               <td>
-                <input type="checkbox" id="etct_DpfRemovalAvailable" name="Options[DpfRemoval]" disabled>
+                <div class="etSprite etUnavailable" id="etct_DpfRemovalAvailable_Display">&times;</div>
               </td>
               <td>
-                <input type="checkbox" id="etct_EgrRemovalAvailable" name="Options[EgrRemoval]" disabled>
+                <div class="etSprite etUnavailable" id="etct_EgrRemovalAvailable_Display">&times;</div>
               </td>
               <td>
-                <input type="checkbox" id="etct_VMaxRemovalAvailable" name="Options[VMaxRemoval]" disabled>
+                <div class="etSprite etUnavailable" id="etct_VMaxRemovalAvailable_Display">&times;</div>
               </td>
               <td>
-                <input type="checkbox" id="etct_RevLimiterRemovalAvailable" name="Options[RevLimiterRemoval]" disabled>
+                <div class="etSprite etUnavailable" id="etct_RevLimiterRemovalAvailable_Display">&times;</div>
               </td>
               <td>
-                <input type="checkbox" id="etct_LaunchControlAvailable" name="Options[LaunchControl]" disabled>
+                <div class="etSprite etUnavailable" id="etct_LaunchControlAvailable_Display">&times;</div>
               </td>
             </tr>
           </tbody>
         </table>
+        <div class="etSubmitButton"><button type="button" id="etct_showRequestQuote">Request quote</button></div>
       </div>
       <div class="etRequestQuote" id="etct_requestQuote">
-        <h2>
+        <h2 class="etLeft">
           Quote request
         </h2>
+        <a href="#" class="etRight etClose" id="etct_close_request">
+          &times;
+        </a>
+        <div class="clearfix"></div>
         <form action="#" id="etct_rq_form">
+          <div class="etLayoutHalf etLeft">
+            <h3>Car</h3>
+            <label for="etct_sr_make">Make:</label>
+            <select id="etct_sr_make" required disabled data-method="make" name="makeId"><option value="">- Loading -</option></select>
+            <label for="etct_sr_model">Model:</label>
+            <select id="etct_sr_model" required disabled data-method="model" name="modelId"><option value="">- Loading -</option></select>
+            <label for="etct_sr_fuel">Fuel:</label>
+            <select id="etct_sr_fuel" required disabled data-method="fuel" name="fuelId"><option value="">- Loading -</option></select>
+            <label for="etct_sr_variant">Variant:</label>
+            <select id="etct_sr_variant" required disabled data-method="variant" name="variantId"><option value="">- Loading -</option></select>
+          </div>
+          <div class="etLayoutQuarter etLeft">
+            <h3>Selected stage</h3>
+            <div id="etct_AvailableStages"></div>
+          </div>
+          <div class="etLayoutQuarter etRight">
+            <h3>Options</h3>
+            <input type="checkbox" id="etct_DpfRemovalAvailable" name="dpfRemoval" disabled> <label class="etInline" for="etct_DpfRemovalAvailable">DPF Removal</label><br>
+            <input type="checkbox" id="etct_EgrRemovalAvailable" name="egrRemoval" disabled> <label class="etInline" for="etct_EgrRemovalAvailable">EGR Removal</label><br>
+            <input type="checkbox" id="etct_VMaxRemovalAvailable" name="vmaxRemoval" disabled> <label class="etInline" for="etct_VMaxRemovalAvailable">VMax Removal</label><br>
+            <input type="checkbox" id="etct_RevLimiterRemovalAvailable" name="revLimiterRemoval" disabled> <label class="etInline" for="etct_RevLimiterRemovalAvailable">Rev Limiter Removal</label><br>
+            <input type="checkbox" id="etct_LaunchControlAvailable" name="launchControl" disabled> <label class="etInline" for="etct_LaunchControlAvailableFor">Launch control</label>
+          </div>
+          <div class="clearfix"></div>
+          <hr/>
           <label for="etct_customerName">Name<span class="etRequired">*</span></label>
           <input type="text" id="etct_customerName" name="customerName" required class="etFullWidth">
           <label for="etct_email">E-mail<span class="etRequired">*</span></label>

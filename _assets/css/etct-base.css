@@ -1,6 +1,8 @@
 /* comment this CSS rule to show the car details template for styling purposes */
 .etResult, .etStage, .etRequestQuote {
   display:none;
+  font-family:Arial;
+  font-size:1em;
 }
 .etWidget select, .etWidget label, .etRequestQuote label, .etRequestQuote select, .etRequestQuote .etFullWidth {
   display:block;
@@ -22,7 +24,7 @@
   padding:20px;
   text-align:center;
 }
-.etWidget .etContent, .etResult, .etRequestQuote {
+.etWidget .etContent, .etResult, .etRequestQuote, .etLightbox {
   padding:20px;
 }
 .etSubmitButton {
@@ -72,4 +74,116 @@
   margin-bottom:-1px;
   position:relative;
   z-index:100;
+}
+.etDarkArea {
+  background-color:rgba(0,0,0,.5);
+  position:fixed;
+  left:0px;
+  right:0px;
+  bottom:0px;
+  top:0px;
+  z-index:999;
+}
+.etResult, .etRequestQuote, .etLightbox {
+  z-index:1000;
+  position:absolute;
+  top:100px;
+  margin:auto;
+  background-color:#fff;
+  left:20%;
+  min-width:300px;
+  max-width:800px;
+  right:20%;
+  box-shadow:0px 5px 20px rgba(0,0,0,.5);
+}
+.etLeft {
+  float:left;
+}
+.etRight {
+  float:right;
+}
+.etClose {
+  text-decoration:none;
+  color:#000;
+  font-weight:bold;
+  font-size:18px;
+  border-radius:12px;
+  -webkit-border-radius:12px;
+  -moz-border-radius:12px;
+  border:1px solid #ccc;
+  display:block;
+  width:24px;
+  height:24px;
+  line-height:24px;
+  text-align:center;
+}
+.etClose:hover {
+  background-color:#000;
+  border-color:#000;
+  color:#fff;
+}
+.etClose:after {
+  clear:both;
+}
+.etSprite {
+  display:block;
+  background-image:url(../img/etctSprite.png);
+  background-repeat:no-repeat;
+  overflow:hidden;
+  text-indent:-1000px;
+}
+.etSprite.etAvailable {
+  width:16px;
+  height:16px;
+  background-position:0px -16px;
+  margin:auto;
+}
+.etSprite.etUnavailable {
+  width:16px;
+  height:16px;
+  background-position:0px 0px;
+  margin:auto;
+}
+.etSprite.etChart {
+  width:16px;
+  height:16px;
+  background-position:-16px 0px;
+  display:inline-block;
+}
+a:hover .etSprite.etChart {
+  background-position:-16px -16px;
+}
+.etSprite.etVideo {
+  width:16px;
+  height:16px;
+  background-position:-32px 0px;
+  display:inline-block;
+}
+a:hover .etSprite.etVideo {
+  background-position:-32px -16px;
+}
+.etInline {
+  display:inline !important;
+}
+.etStages table td {
+  text-align:center !important;
+}
+.etStages a .etSprite {
+  margin-bottom:-2px;
+}
+.etLayoutHalf {
+  width:48%;
+  margin:0px 1%;
+}
+.etLayoutQuarter {
+  margin:0px 1%;
+  width:23%;
+}
+.etRequestQuote hr {
+  margin:10px 0px 15px 0px;
+  border:none;
+  border-bottom:1px solid #efefef;
+}
+.clearfix {
+  clear:both;
 }

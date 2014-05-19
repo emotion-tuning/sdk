@@ -8,10 +8,8 @@ The general SDK for Celtic/Emotion tuning's car search API.
 - old versions of Internet Explorer (older than IE8, included) **ARE NOT SUPPORTED**
 
 ## DEMO
-- [**Demo 1 - simple widget, results on a new page**](https://www.emotion-tuning.com/SDK/index.htm)
-- [Demo 2 - simple widget, results on the same page](https://www.emotion-tuning.com/SDK/index-one-page.htm)
-- [Demo 3 - no styling, results on a new page](https://www.emotion-tuning.com/SDK/index-simple.htm)
-- [Demo 4 - no styling, results on the same page](https://www.emotion-tuning.com/SDK/index-simple-one-page.htm)
+- [**Demo 1 - simple**](https://www.emotion-tuning.com/SDK/index.htm)
+- [**Demo 2 - widget**](https://www.emotion-tuning.com/SDK/index-widget.htm)
 
 ### How to use
 - Check requirements. Does your server support _PHP_? 
@@ -55,7 +53,7 @@ The general SDK for Celtic/Emotion tuning's car search API.
       with an actual key and save the file
    
 3. #### Update your site
-   1. Upload all files - the changed original site files _and_ the new SDK files - to your PHP server
+   1. Upload changed files _and_ the new SDK files to your PHP server
    2. Check your site in any browser
    3. Share the update with your clients! :-)
    
