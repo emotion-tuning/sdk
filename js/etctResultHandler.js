@@ -117,10 +117,16 @@ function emotionResponseHandler()
   
   this.fillVehicleProperties = function()
   {
+    var thisObj = this;
     var l_churlLink = null;
     var l_vurlLink = null;
     document.getElementById('etct_VehicleModelImageUrl').setAttribute('src', this.m_originalPlaceholderImage);
     var l_AS = document.getElementById('etct_AvailableStages');
+	document.getElementById('etct_carCompleteString').value = this.m_lastCar['MakeName'] + ', ' + this.m_lastCar['ModelName'] + ', ' + this.m_lastCar['Fuel'] + ', ' + this.m_lastCar['VariantName'];
+	try{
+	  var l_previousNotice = document.querySelector('.etNotice')[0];
+      l_previousNotice.parentNode.removeChild(l_previousNotice);
+	} catch(e) {}
     if(l_AS != null)
     {
       while (l_AS.firstChild)
@@ -170,7 +176,16 @@ function emotionResponseHandler()
             }
           } else {
             try {
-              l_Placeholder.innerHTML = this.m_lastCar[key];
+			  var l_val = this.m_lastCar[key];
+			  if(key == 'StandardPower')
+			  {
+			    l_val += ' ' + this.m_lastCar['StandardPowerUnit'];
+			  }
+			  if(key == 'StandardTorque')
+			  {
+				l_val += ' ' + this.m_lastCar['StandardTorqueUnit'];
+			  }
+              l_Placeholder.innerHTML = l_val;
             } catch(e) {
               console.warn('Could not fill this element: ' + key);
             }
@@ -209,8 +224,13 @@ function emotionResponseHandler()
                   l_AvailableStage_Chb.name = 'TuningStageId';
                   l_AvailableStage_Chb.type = 'radio';
                   l_AvailableStage_Chb.value = this.m_lastCar[key][l_i][l_ts_key];
+				  l_AvailableStage_Chb.setAttribute('data-title', this.m_lastCar[key][l_i]['TuningStageTitle']);
+				  l_AvailableStage_Chb.addEventListener('change', function(f_Event){
+					document.getElementById('etct_stageName').value = f_Event.target.getAttribute('data-title');
+				  }, false);
                   if(this.m_lastCar[key][l_i]['DefaultStage'])
                   {
+					document.getElementById('etct_stageName').value = this.m_lastCar[key][l_i]['TuningStageTitle'];
                     l_AvailableStage_Chb.setAttribute('checked', 'checked');
                   }
                   l_AvailableStage_Label.innerHTML = this.m_lastCar[key][l_i]['TuningStageTitle'];
@@ -223,7 +243,16 @@ function emotionResponseHandler()
                   var l_ts_placeholder = l_stageTemplate.querySelector('.etct_' + l_ts_key);
                   if(l_ts_placeholder != null)
                   {
-                    l_ts_placeholder.innerHTML = this.m_lastCar[key][l_i][l_ts_key];
+					var l_val = this.m_lastCar[key][l_i][l_ts_key];
+                    if(l_ts_key == 'ModifiedPower' || l_ts_key == 'StandardPower')
+                    {
+					  l_val += ' ' + this.m_lastCar[key][l_i]['ModifiedPowerUnit'];
+					}
+                    if(l_ts_key == 'ModifiedTorque' || l_ts_key == 'StandardTorque')
+                    {
+					  l_val += ' ' + this.m_lastCar[key][l_i]['ModifiedTorqueUnit'];
+					}
+                    l_ts_placeholder.innerHTML = l_val;
                   }
                 }
                 
@@ -231,20 +260,33 @@ function emotionResponseHandler()
                 // count the gains in power / torque
                 if(l_ts_key == 'ModifiedPower')
                 {
-                  l_stageTemplate.querySelector('.etct_PowerGain').innerHTML = this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardPower'];
+                  l_stageTemplate.querySelector('.etct_PowerGain').innerHTML = (this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardPower']) + ' ' + this.m_lastCar[key][l_i]['ModifiedPowerUnit'];
                 }
                 if(l_ts_key == 'ModifiedTorque')
                 {
-                  l_stageTemplate.querySelector('.etct_TorqueGain').innerHTML = this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardTorque'];
+                  l_stageTemplate.querySelector('.etct_TorqueGain').innerHTML = (this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardTorque']) + ' ' + this.m_lastCar[key][l_i]['ModifiedTorqueUnit'];
                 }
               } 
                 // add video and chart buttons
                 var l_vurl = this.m_lastCar[key][l_i]['VideoUrl'];
+				if(typeof(l_vurl) != 'undefined' && l_vurl != '' && l_vurl != null && l_vurl.indexOf('embed') == -1)
+				{
+				  if(l_vurl.indexOf('watch') != -1)
+				  {
+					var l_VideoToken = l_vurl.split('watch?v=')[1].split('&')[0];
+					l_vurl = 'http://www.youtube.com/embed/' + l_VideoToken;
+				  } else if(l_vurl.indexOf('youtu.be') != -1) {
+					var l_VideoToken = l_vurl.split('.be/')[1].split('?')[0];
+					l_vurl = 'http://www.youtube.com/embed/' + l_VideoToken;
+				  } else {
+					l_vurl = null;
+				  }
+				}
                 if(typeof(l_vurl) != 'undefined' && l_vurl != '' && l_vurl != null)
                 {
                   l_vurlLink = document.createElement('a');
                   l_vurlLink.setAttribute('href', l_vurl);
-                  l_vurlLink.innerHTML = '<span class="etSprite etVideo"></span> Video';
+                  l_vurlLink.innerHTML = '&nbsp;&nbsp;<span class="etSprite etVideo"></span> Video';
                   l_vurlLink.addEventListener('click', function(f_Event){
                     var l_url = f_Event.target.getAttribute('href');
                     document.getElementById('etct_result').style.display = 'none';
@@ -264,13 +306,15 @@ function emotionResponseHandler()
                     l_generalLightbox.appendChild(l_close);
                     var l_Clearfix = document.createElement('div');
                     l_generalLightbox.appendChild(l_Clearfix);
-                    var l_VideoPlayer = document.createElement('iframe');
-                    l_videoPlayer.setAttribute('width', '100%');
-                    l_videoPlayer.setAttribute('height', '500');
-                    l_videoPlayer.setAttribute('frameborder', '0');
-                    l_videoPlayer.setAttribute('allowfullscreen', 'true');
-                    l_videoPlayer.setAttribute('src', l_url);
-                    l_generalLightbox.appendChild(l_videoPlayer);
+					try{
+                      var l_YTPlayer = document.createElement('iframe');
+                      l_YTPlayer.setAttribute('width', '100%');
+                      l_YTPlayer.setAttribute('height', '500');
+                      l_YTPlayer.setAttribute('frameborder', '0');
+                      l_YTPlayer.setAttribute('allowfullscreen', 'true');
+                      l_YTPlayer.setAttribute('src', l_vurl);
+                      l_generalLightbox.appendChild(l_YTPlayer);
+					} catch(e) { console.log('could not add YT iframe ' + e); }
                     document.getElementsByTagName('body')[0].appendChild(l_generalLightbox);
                     f_Event.preventDefault();
                   }, false);

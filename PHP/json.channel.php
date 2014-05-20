@@ -41,10 +41,6 @@
         if(trim($value) != '' && $value != -1)
         {
           $l_Data[$key] = etctApiHelpers::sanitize($value, true);
-          if($key == 'email' && defined(DEALER_EMAIL))
-          {
-            $l_Data[$key] .= ',' . DEALER_EMAIL; 
-          }
         }
       }
     }
@@ -55,25 +51,30 @@
     
     if(!is_null($l_Method))
     {
-      $l_ResponseObject = $i_etctApi->execute($l_Method, $l_Data);
-      // this resolves eMotion/Celtic tuning API's compatibility
-      if(!isset($l_ResponseObject->ErrorMessage) && !isset($l_ResponseObject->Success))
-      {  
-        if(is_array($l_ResponseObject))
-        {
-          $l_ResponseObject = (object)array('Items' => $l_ResponseObject);
-        }
-        if(!isset($l_ResponseObject->Successful))
-        {
-          $l_ResponseObject->Success = true;
-        }
-      }
-      echo json_encode($l_ResponseObject);
-      if(isset($l_ResponseObject->ErrorMessage) || isset($l_ResponseObject->ValidationErrors))
+      if($_REQUEST['etct_method'] == 'request' && !is_null(DEALER_EMAIL))
       {
-        error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
+        require_once('_sendRequestToDealer.php');
+      } else {
+        $l_ResponseObject = $i_etctApi->execute($l_Method, $l_Data);
+        // this resolves eMotion/Celtic tuning API's compatibility
+        if(!isset($l_ResponseObject->ErrorMessage) && !isset($l_ResponseObject->Success))
+        {  
+          if(is_array($l_ResponseObject))
+          {
+            $l_ResponseObject = (object)array('Items' => $l_ResponseObject);
+          }
+          if(!isset($l_ResponseObject->Successful))
+          {
+            $l_ResponseObject->Success = true;
+          }
+        }
+        echo json_encode($l_ResponseObject);
+        if(isset($l_ResponseObject->ErrorMessage) || isset($l_ResponseObject->ValidationErrors))
+        {
+          error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
+        }
+        unset($l_ResponseObject, $l_Data, $l_Method);
       }
-      unset($l_ResponseObject, $l_Data, $l_Method);
     } else {
       echo json_encode(array('ErrorMessage' => 'Invalid method supplied'));
     }
