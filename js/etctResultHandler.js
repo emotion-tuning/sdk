@@ -274,10 +274,10 @@ function emotionResponseHandler()
 				  if(l_vurl.indexOf('watch') != -1)
 				  {
 					var l_VideoToken = l_vurl.split('watch?v=')[1].split('&')[0];
-					l_vurl = 'http://www.youtube.com/embed/' + l_VideoToken;
+					l_vurl = '//www.youtube.com/embed/' + l_VideoToken;
 				  } else if(l_vurl.indexOf('youtu.be') != -1) {
 					var l_VideoToken = l_vurl.split('.be/')[1].split('?')[0];
-					l_vurl = 'http://www.youtube.com/embed/' + l_VideoToken;
+					l_vurl = '//www.youtube.com/embed/' + l_VideoToken;
 				  } else {
 					l_vurl = null;
 				  }
