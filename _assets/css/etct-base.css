@@ -30,10 +30,10 @@
 .etSubmitButton {
   text-align:center;
 }
-.etResult table, .etResult p {
+.etResult table, .etRequestQuote table, .etResult p {
   margin-bottom:20px;
 }
-.etResult table {
+.etResult table, .etRequestQuote table {
   width:100%;
 }
 .etStage .etStageDesc {
@@ -165,7 +165,7 @@ a:hover .etSprite.etVideo {
 .etInline {
   display:inline !important;
 }
-.etStages table td {
+.etStages table td, .etRequestQuote table {
   text-align:center !important;
 }
 .etStages a .etSprite {

@@ -158,6 +158,27 @@ function emotionResponseHandler()
     document.getElementById('etct_RevLimiterRemovalAvailable_Display').className = 'etSprite ' + (this.m_lastCar['RevLimiterRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
     document.getElementById('etct_VMaxRemovalAvailable_Display').className = 'etSprite ' + (this.m_lastCar['VMaxRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
     document.getElementById('etct_LaunchControlAvailable_Display').className = 'etSprite ' + (this.m_lastCar['LaunchControlAvailable'] ? 'etAvailable' : 'etUnavailable');
+
+	// create stages table
+	var l_stagesTable = document.createElement('table');
+	var l_st_head = document.createElement('thead');
+	var l_st_head_tr = document.createElement('tr');
+	var l_st_head_th1 = document.createElement('th');
+	l_st_head_th1.innerHTML = 'Tuning Stage';
+	var l_st_head_th2 = document.createElement('th');
+	l_st_head_th2.innerHTML = 'Power (' + this.m_lastCar['StandardPowerUnit'] + ')';
+	var l_st_head_th3 = document.createElement('th');
+	l_st_head_th3.innerHTML = 'Torque (' + this.m_lastCar['StandardTorqueUnit'] + ')';
+	var l_st_head_th4 = document.createElement('th');
+	l_st_head_th4.innerHTML = 'Select';
+	var l_st_body = document.createElement('tbody');
+	l_st_head_tr.appendChild(l_st_head_th1);
+	l_st_head_tr.appendChild(l_st_head_th2);
+	l_st_head_tr.appendChild(l_st_head_th3);
+	l_st_head_tr.appendChild(l_st_head_th4);
+	l_st_head.appendChild(l_st_head_tr);
+	l_stagesTable.appendChild(l_st_head);
+	l_stagesTable.appendChild(l_st_body);
     
     for(key in this.m_lastCar)
     {
@@ -219,8 +240,6 @@ function emotionResponseHandler()
                 if(l_ts_key == 'TuningStageId')
                 {
                   var l_AvailableStage_Chb = document.createElement('input');
-                  var l_AvailableStage_Label = document.createElement('label');
-                  var l_AvailableStage = document.createElement('div');
                   l_AvailableStage_Chb.name = 'TuningStageId';
                   l_AvailableStage_Chb.type = 'radio';
                   l_AvailableStage_Chb.value = this.m_lastCar[key][l_i][l_ts_key];
@@ -233,11 +252,21 @@ function emotionResponseHandler()
 					document.getElementById('etct_stageName').value = this.m_lastCar[key][l_i]['TuningStageTitle'];
                     l_AvailableStage_Chb.setAttribute('checked', 'checked');
                   }
-                  l_AvailableStage_Label.innerHTML = this.m_lastCar[key][l_i]['TuningStageTitle'];
-                  l_AvailableStage_Label.className = 'etInline';
-                  l_AvailableStage.appendChild(l_AvailableStage_Chb);
-                  l_AvailableStage.appendChild(l_AvailableStage_Label);
-                  document.getElementById('etct_AvailableStages').appendChild(l_AvailableStage);
+				  
+				  var l_as_row = document.createElement('tr');
+				  var l_as_td1 = document.createElement('td');
+				  l_as_td1.innerHTML = this.m_lastCar[key][l_i]['TuningStageTitle'];
+				  var l_as_td2 = document.createElement('td');
+				  l_as_td2.innerHTML = this.m_lastCar[key][l_i]['ModifiedPower'];
+				  var l_as_td3 = document.createElement('td');
+				  l_as_td3.innerHTML = this.m_lastCar[key][l_i]['ModifiedTorque'];
+				  var l_as_td4 = document.createElement('td');
+                  l_as_td4.appendChild(l_AvailableStage_Chb);
+				  l_as_row.appendChild(l_as_td1);
+				  l_as_row.appendChild(l_as_td2);
+				  l_as_row.appendChild(l_as_td3);
+				  l_as_row.appendChild(l_as_td4);
+				  l_st_body.appendChild(l_as_row);
                 } else {
                   // set the value to a placeholder, if such placeholder is found  
                   var l_ts_placeholder = l_stageTemplate.querySelector('.etct_' + l_ts_key);
@@ -425,7 +454,9 @@ function emotionResponseHandler()
         }
       }
     }
-    document.getElementById('etct_result').style.display = 'block';
+    
+	document.getElementById('etct_AvailableStages').appendChild(l_stagesTable);
+	document.getElementById('etct_result').style.display = 'block';
     
     // prepare and show the request form
     l_toYear = new Date().getFullYear();

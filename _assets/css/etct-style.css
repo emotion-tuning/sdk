@@ -44,7 +44,7 @@
 .etError a {
   color:#fff;
 }
-.etResult table tr:nth-child(odd) td {
+.etResult table tr:nth-child(odd) td, .etRequestQuote table tr:nth-child(odd) td {
   background-color:#efefef;
 }
 .etStage .etStageDesc {
@@ -57,7 +57,7 @@
 .bigContainer .etWidget, .bigContainer .etResult, .bigContainer .etRequestQuote {
   box-shadow:0px 5px 15px rgba(0,0,0,.15);
 }
-.etResult table {
+.etResult table, .etRequestQuote table {
   border:1px solid #ccc;
 }
 .carDetails {
