@@ -68,7 +68,7 @@
             $l_ResponseObject->Success = true;
           }
         }
-        echo json_encode($l_ResponseObject);
+        $l_Output = json_encode($l_ResponseObject);
         if(isset($l_ResponseObject->ErrorMessage) || isset($l_ResponseObject->ValidationErrors))
         {
           error_log(var_export($_REQUEST, true)."\r\n", 3, 'log.log');
@@ -84,4 +84,4 @@
   header('Content-Type: application/json');
   header('Content-Length: ' . strlen($l_Output));
   echo $l_Output;
-?>
+?>	
