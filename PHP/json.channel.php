@@ -3,11 +3,11 @@
   define('ETCT_API_KEY', 'INSERT_API_KEY_HERE');
   define('DEALER_EMAIL', NULL);
   
+  $l_Output = '';
   if(isset($_REQUEST['etct_method']))
   {
     require_once('classes/etctApi.php');
     $i_etctApi = new etctApi;
-    header('Content-Type: application/json');
     
     // only work with allowed methods
     $l_Method = NULL;
@@ -76,9 +76,12 @@
         unset($l_ResponseObject, $l_Data, $l_Method);
       }
     } else {
-      echo json_encode(array('ErrorMessage' => 'Invalid method supplied'));
+      $l_Output = json_encode(array('ErrorMessage' => 'Invalid method supplied'));
     }
   } else {
-    echo json_encode(array('ErrorMessage' => 'Required parameters not provided'));
+    $l_Output = json_encode(array('ErrorMessage' => 'Required parameters not provided'));
   }
+  header('Content-Type: application/json');
+  header('Content-Length: ' . strlen($l_Output));
+  echo $l_Output;
 ?>

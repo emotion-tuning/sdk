@@ -144,5 +144,5 @@
       $l_Response['ErrorMessage'] = 'Mail sending failed!';
     }
   }
-  echo json_encode((object)$l_Response);
+  $l_Output = $l_Response;
 ?>
