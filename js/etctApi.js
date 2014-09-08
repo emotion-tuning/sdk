@@ -355,7 +355,7 @@ function etctApi()
   
   this._ltIE9 = function()
   {
-    l_test = /msie.[0-9]/.test(window.navigator.userAgent.toLowerCase());
+    l_test = /msie.[0-9]\./.test(window.navigator.userAgent.toLowerCase());
     return typeof(l_test) != 'undefined' ? l_test : false;
   }
   
