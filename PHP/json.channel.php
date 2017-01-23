@@ -6,6 +6,7 @@
   $l_Output = '';
   if(isset($_REQUEST['etct_method']))
   {
+    require_once('classes/common.php');
     require_once('classes/etctApi.php');
     $i_etctApi = new etctApi;
     
@@ -40,7 +41,7 @@
       {
         if(trim($value) != '' && $value != -1)
         {
-          $l_Data[$key] = etctApiHelpers::sanitize($value, true);
+          $l_Data[$key] = CTCommon::sanitize($value, true);
         }
       }
     }

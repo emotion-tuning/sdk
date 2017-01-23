@@ -2,6 +2,7 @@
   define('ETCT_API_ENDPOINT', 'http://celtictuningapi.co.uk');
   define('ETCT_API_KEY', 'INSERT_ETCT_API_KEY_HERE');
   
+  require_once('classes/common.php');
   require_once('classes/etctApi.php');
   
   // create an instance of the Emotion Tuning API

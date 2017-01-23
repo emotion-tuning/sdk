@@ -46,30 +46,8 @@
           
       unset($l_prependData);      
       $this->m_lastMethod = $f_method;
-      $l_response = $this->curl_post(json_encode(array_merge($f_data)));
+      $l_response = CTCommon::curlPost($this->m_endpoint . $this->m_lastMethod, json_encode(array_merge($f_data)));
       return !is_null(json_decode($l_response)) ? json_decode($l_response) : (object)array('ErrorMessage' => 'Server did not reply with a valid JSON response.', 'raw' => htmlentities($l_response));
-    }
-      
-    private function curl_post($f_jsonData)
-    {
-      $l_ch = curl_init($this->m_endpoint . $this->m_lastMethod);
-      curl_setopt($l_ch, CURLOPT_CUSTOMREQUEST, 'POST');
-      curl_setopt($l_ch, CURLOPT_POSTFIELDS, $f_jsonData);
-      curl_setopt($l_ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($l_ch, CURLOPT_HTTPHEADER, array(
-        'Content-Type: application/json',
-        'Content-Length: ' . strlen($f_jsonData))
-      );
-      error_log("\r\n".$this->m_endpoint . $this->m_lastMethod . '?'.http_build_query(json_decode($f_jsonData))."\r\n", 3, 'log.log');
-
-      if(!$l_result = curl_exec($l_ch))
-      {
-        die('Curl error: ' . curl_error($l_ch));
-      }
-      
-      curl_close($l_ch);
-      unset($l_ch);
-      return $l_result;
     }
     
     private function checkDependencies()
@@ -78,29 +56,6 @@
       {
         die('Emotion Tuning API PHP SDK error: required PHP modules not enabled!');
       }
-    }
-  }
-  
-  class etctApiHelpers
-  {
-    public static function sanitize($f_Input, $f_Email = false)
-    {
-      $l_output = '';
-      $l_allowedCharacters = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '-', '_', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
-      if($f_Email)
-      {
-        array_push($l_allowedCharacters, '@');
-      }
-      for($l_i = 0, $l_max = strlen($f_Input); $l_i < $l_max; $l_i++)
-      {
-        if(in_array(strtolower(substr($f_Input, $l_i, 1)), $l_allowedCharacters))
-        {
-          $l_output .= substr($f_Input, $l_i, 1);
-        }
-      }
-      unset($l_allowedCharacters);
-        
-      return $l_output;
     }
   }
 ?>
