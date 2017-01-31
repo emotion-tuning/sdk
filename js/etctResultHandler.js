@@ -153,11 +153,11 @@ function emotionResponseHandler()
     }
     
     // set stats display
-    document.getElementById('etct_DpfRemovalAvailable_Display').className = 'etSprite ' + (this.m_lastCar['DpfRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
-    document.getElementById('etct_EgrRemovalAvailable_Display').className = 'etSprite ' + (this.m_lastCar['EgrRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
-    document.getElementById('etct_RevLimiterRemovalAvailable_Display').className = 'etSprite ' + (this.m_lastCar['RevLimiterRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
-    document.getElementById('etct_VMaxRemovalAvailable_Display').className = 'etSprite ' + (this.m_lastCar['VMaxRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
-    document.getElementById('etct_LaunchControlAvailable_Display').className = 'etSprite ' + (this.m_lastCar['LaunchControlAvailable'] ? 'etAvailable' : 'etUnavailable');
+    document.getElementById('etct_DpfRemovalAvailable_Display').className = (this.m_lastCar['DpfRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
+    document.getElementById('etct_EgrRemovalAvailable_Display').className = (this.m_lastCar['EgrRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
+    document.getElementById('etct_RevLimiterRemovalAvailable_Display').className = (this.m_lastCar['RevLimiterRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
+    document.getElementById('etct_VMaxRemovalAvailable_Display').className = (this.m_lastCar['VMaxRemovalAvailable'] ? 'etAvailable' : 'etUnavailable');
+    document.getElementById('etct_LaunchControlAvailable_Display').className = (this.m_lastCar['LaunchControlAvailable'] ? 'etAvailable' : 'etUnavailable');
 
 	// create stages table
 	var l_stagesTable = document.createElement('table');
@@ -200,11 +200,11 @@ function emotionResponseHandler()
 			  var l_val = this.m_lastCar[key];
 			  if(key == 'StandardPower')
 			  {
-			    l_val += ' ' + this.m_lastCar['StandardPowerUnit'];
+			    l_val += '<br><span class="etct_Small">' + this.m_lastCar['StandardPowerUnit'] + '</span>';
 			  }
 			  if(key == 'StandardTorque')
 			  {
-				l_val += ' ' + this.m_lastCar['StandardTorqueUnit'];
+				l_val += '<br><span class="etct_Small">' + this.m_lastCar['StandardTorqueUnit'] + '</span>';
 			  }
               l_Placeholder.innerHTML = l_val;
             } catch(e) {
@@ -275,11 +275,11 @@ function emotionResponseHandler()
 					var l_val = this.m_lastCar[key][l_i][l_ts_key];
                     if(l_ts_key == 'ModifiedPower' || l_ts_key == 'StandardPower')
                     {
-					  l_val += ' ' + this.m_lastCar[key][l_i]['ModifiedPowerUnit'];
+					  l_val += '<br><span class="etct_Small">' + this.m_lastCar[key][l_i]['ModifiedPowerUnit'] + '</span>';
 					}
                     if(l_ts_key == 'ModifiedTorque' || l_ts_key == 'StandardTorque')
                     {
-					  l_val += ' ' + this.m_lastCar[key][l_i]['ModifiedTorqueUnit'];
+					  l_val += '<br><span class="etct_Small">' + this.m_lastCar[key][l_i]['ModifiedTorqueUnit'] + '</span>';
 					}
                     l_ts_placeholder.innerHTML = l_val;
                   }
@@ -289,11 +289,11 @@ function emotionResponseHandler()
                 // count the gains in power / torque
                 if(l_ts_key == 'ModifiedPower')
                 {
-                  l_stageTemplate.querySelector('.etct_PowerGain').innerHTML = (this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardPower']) + ' ' + this.m_lastCar[key][l_i]['ModifiedPowerUnit'];
+                  l_stageTemplate.querySelector('.etct_PowerGain').innerHTML = '+' + (this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardPower']) + '<br><span class="etct_Small">' + this.m_lastCar[key][l_i]['ModifiedPowerUnit'] + '</span>';
                 }
                 if(l_ts_key == 'ModifiedTorque')
                 {
-                  l_stageTemplate.querySelector('.etct_TorqueGain').innerHTML = (this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardTorque']) + ' ' + this.m_lastCar[key][l_i]['ModifiedTorqueUnit'];
+                  l_stageTemplate.querySelector('.etct_TorqueGain').innerHTML = '+' + (this.m_lastCar[key][l_i][l_ts_key] - this.m_lastCar['StandardTorque']) + '<br><span class="etct_Small">' + this.m_lastCar[key][l_i]['ModifiedTorqueUnit'] + '</span>';
                 }
               } 
                 // add video and chart buttons

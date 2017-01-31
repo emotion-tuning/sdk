@@ -5,8 +5,11 @@
     <title>Celtic Tuning/Emotion Tuning Javascript SDK example</title>
     <link rel="stylesheet" href="_assets/css/etct-microsite.min.css" media="all">
     <!-- emotion dependencies start -->
-    <link rel="stylesheet" href="_assets/css/etct-base-and-style.min.css" media="screen">
-    <script type="text/javascript" src="js/etctApi.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="_assets/css/etct-base.css" media="screen">
+    <link rel="stylesheet" href="_assets/css/etct-style.css" media="screen">
+    <script type="text/javascript" src="js/etctApi.js"></script>
+    <script type="text/javascript" src="js/etctResultHandler.js"></script>
     <!-- emotion dependencies end -->
   </head>
   <body>
@@ -32,143 +35,119 @@
         </div>
       </div>
       <div class="etResult" id="etct_result">
-        <h2 class="etLeft">
-          <span id="etct_ModelAndPlatformName"></span>
-        </h2>
+        <h1 class="etLeft">
+          <span id="etct_MakeName"></span> <span id="etct_ModelAndPlatformName"></span>
+        </h1>
         <a href="#" class="etRight etClose" id="etct_close_result">
           &times;
         </a>
         <div class="clearfix"></div>
-        <p><img src="_assets/img/placeholder.png" id="etct_VehicleModelImageUrl" width="auto" height="auto" alt="img" align="left" class="etImg" /><span id="etct_CustomerNotes"></span></p>
-        <div class="clearfix"></div>
-        
-        <h2>Vehicle stats</h2>
-        <table class="etVehicleStats">
-          <tr>
-            <td><strong>Model:</strong></td>
-            <td><span id="etct_ModelName"></span></td>
-          </tr>
-          <tr>
-            <td><strong>Variant:</strong></td>
-            <td><span id="etct_VariantName"></span></td>
-          </tr>
-          <tr>
-            <td><strong>Years:</strong></td>
-            <td><span id="etct_VariantFromYear"></span> - <span id="etct_VariantToYear"></span></td>
-          </tr>
-          <tr>
-            <td><strong>Fuel:</strong></td>
-            <td><span id="etct_Fuel"></span></td>
-          </tr>
-          <tr>
-            <td><strong>Engine Size:</strong></td>
-            <td><span id="etct_EngineCC">0</span>ccm</td>
-          </tr>
-          <tr>
-            <td><strong>ECU Type:</strong></td>
-            <td><span id="etct_ECUType"></span></td>
-          </tr>
-        </table>
-        <h2>
-          Stages
-        </h2>
-        <ul class="etStageTabs" id="etct_stageTabs"></ul>
-        <div class="clearfix"></div>
-        <div class="etStage" id="etct_template_stage">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  Specs
-                </th>
-                <th>
-                  Original
-                </th>
-                <th>
-                  Modified
-                </th>
-                <th>
-                  +
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  Power (<span id="etct_StandardPowerUnit"></span>)
-                </td>
-                <td>
-                  <span id="etct_StandardPower"></span>
-                </td>
-                <td>
-                  <span class="etct_ModifiedPower"></span>
-                </td>
-                <td>
-                  <span class="etct_PowerGain"></span>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Torque (<span id="etct_StandardTorqueUnit"></span>)
-                </td>
-                <td>
-                  <span id="etct_StandardTorque"></span>
-                </td>
-                <td>
-                  <span class="etct_ModifiedTorque"></span>
-                </td>
-                <td>
-                  <span class="etct_TorqueGain"></span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+		<div class="etct_LeftCol">
+		  <img src="_assets/img/placeholder.png" id="etct_VehicleModelImageUrl" width="auto" height="auto" alt="img" align="left" class="etImg" />
+			<table class="etVehicleStats">
+			  <tr>
+				<td><strong>Model:</strong></td>
+				<td><span id="etct_ModelName"></span></td>
+			  </tr>
+			  <tr>
+				<td><strong>Variant:</strong></td>
+				<td><span id="etct_VariantName"></span></td>
+			  </tr>
+			  <tr>
+				<td><strong>Years:</strong></td>
+				<td><span id="etct_VariantFromYear"></span> - <span id="etct_VariantToYear"></span></td>
+			  </tr>
+			  <tr>
+				<td><strong>Fuel:</strong></td>
+				<td><span id="etct_Fuel"></span></td>
+			  </tr>
+			  <tr>
+				<td><strong>Engine Size:</strong></td>
+				<td><span id="etct_EngineCC">0</span>ccm</td>
+			  </tr>
+			  <tr>
+				<td><strong>ECU Type:</strong></td>
+				<td><span id="etct_ECUType"></span></td>
+			  </tr>
+			</table>
+			
+			<h2>
+			  Available <span class="etServicesHighlight">Services</span>
+			</h2>
+			<div class="etServices">
+			  <img src="_assets/img/dpf.png" alt="" title="Where applicable we are able to switch off the software functionality and monitoring for the Diesel Particulate Filter enabling it to be removed from the vehicle. For more information please refer to our section on DPF Removal." id="etct_DpfRemovalAvailable_Display">
+			  <img src="_assets/img/egr.png" alt="" title="Where applicable we are able to switch off the software functionality and monitoring for the Exhaust Gas Recirculation valve enabling it to be blanked off. For more information please refer to our section on EGR Removal." id="etct_EgrRemovalAvailable_Display">
+			  <img src="_assets/img/vmax.png" alt="" title="Where applicable we are able to raise/lower or completely remove the maximum speed limiter from a vehicle." id="etct_VMaxRemovalAvailable_Display">
+			  <img src="_assets/img/rev-limit.png" alt="" title="Where applicable we are able to raise the RPM limiter enabling a wider RPM band for performance. This is available on both petrol and diesel engines." id="etct_RevLimiterRemovalAvailable_Display">
+			  <img src="_assets/img/launch-control.png" alt="" title="Where applicable we are able to alter/install launch control into the software. This enables fixed RPM launches enabling faster sprint times. An addition for the dedicated enthusiast." id="etct_LaunchControlAvailable_Display">
+			  <div class="clearfix"></div>
+			</div>
         </div>
-        <div id="etct_TuningStages" class="etStages"></div>      
-        <h2>
-          Available Options
-        </h2>
-        <table>
-          <thead>
-            <tr>
-              <th>
-                DPF Removal
-              </th>
-              <th>
-                EGR Removal
-              </th>
-              <th>
-                VMax Removal
-              </th>
-              <th>
-                Rev limiter Removal
-              </th>
-              <th>
-                Launch Control
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="etSprite etUnavailable" title="Where applicable we are able to switch off the software functionality and monitoring for the Diesel Particulate Filter enabling it to be removed from the vehicle. For more information please refer to our section on DPF Removal." id="etct_DpfRemovalAvailable_Display">&times;</div>
-              </td>
-              <td>
-                <div class="etSprite etUnavailable" title="Where applicable we are able to switch off the software functionality and monitoring for the Exhaust Gas Recirculation valve enabling it to be blanked off. For more information please refer to our section on EGR Removal." id="etct_EgrRemovalAvailable_Display">&times;</div>
-              </td>
-              <td>
-                <div class="etSprite etUnavailable" title="Where applicable we are able to raise/lower or completely remove the maximum speed limiter from a vehicle." id="etct_VMaxRemovalAvailable_Display">&times;</div>
-              </td>
-              <td>
-                <div class="etSprite etUnavailable" title="Where applicable we are able to raise the RPM limiter enabling a wider RPM band for performance. This is available on both petrol and diesel engines." id="etct_RevLimiterRemovalAvailable_Display">&times;</div>
-              </td>
-              <td>
-                <div class="etSprite etUnavailable" title="Where applicable we are able to alter/install launch control into the software. This enables fixed RPM launches enabling faster sprint times. An addition for the dedicated enthusiast." id="etct_LaunchControlAvailable_Display">&times;</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="etSubmitButton"><button type="button" id="etct_showRequestQuote">Request quote</button></div>
+		<div class="etct_RightCol">
+		  <p class="etct_CustomerNotes"><span id="etct_CustomerNotes"></span></p>
+		  
+		    <div class="etFloatLeft">
+			  <h2>
+			    Stages
+			  </h2>
+			  <ul class="etStageTabs" id="etct_stageTabs"></ul>
+			</div>
+			<div class="etSubmitButton"><button type="button" id="etct_showRequestQuote">Request quote</button></div>
+			<div class="clearfix"></div>
+			<div class="etStage" id="etct_template_stage">
+			  <table>
+				<thead>
+				  <tr>
+					<th>
+					  Specs
+					</th>
+					<th>
+					  Original
+					</th>
+					<th>
+					  Modified
+					</th>
+					<th>
+					  Difference
+					</th>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr>
+					<td>
+					  Power<br><span class="etct_Small">(<span id="etct_StandardPowerUnit"></span>)</span>
+					</td>
+					<td>
+					  <div class="etCircle"><span id="etct_StandardPower"></span></div>
+					</td>
+					<td>
+					  <div class="etCircle"><span class="etct_ModifiedPower"></span></div>
+					</td>
+					<td>
+					  <div class="etCircle"><span class="etct_PowerGain"></span></div>
+					</td>
+				  </tr>
+				  <tr>
+					<td>
+					  Torque<br><span class="etct_Small">(<span id="etct_StandardTorqueUnit"></span>)</span>
+					</td>
+					<td>
+					  <div class="etCircle etTorque"><span id="etct_StandardTorque"></span></div>
+					</td>
+					<td>
+					  <div class="etCircle etTorque"><span class="etct_ModifiedTorque"></span></div>
+					</td>
+					<td>
+					  <div class="etCircle etTorque"><span class="etct_TorqueGain"></span></div>
+					</td>
+				  </tr>
+				</tbody>
+			  </table>
+			</div>
+			<div id="etct_TuningStages" class="etStages"></div>      
+			
+		</div>
+        <div class="clearfix"></div>
       </div>
       <div class="etRequestQuote" id="etct_requestQuote">
         <h2 class="etLeft">

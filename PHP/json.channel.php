@@ -83,6 +83,6 @@
     $l_Output = json_encode(array('ErrorMessage' => 'Required parameters not provided'));
   }
   header('Content-Type: application/json');
-  header('Content-Length: ' . strlen($l_Output));
+  //header('Content-Length: ' . strlen($l_Output));
   echo $l_Output;
 ?>	

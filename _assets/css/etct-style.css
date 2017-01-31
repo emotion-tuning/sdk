@@ -1,9 +1,8 @@
+.etWidget, .etResult {
+	font-family: 'Roboto', sans-serif !important;
+}
 .etWidget header {
   background-color:#000;
-}
-.etStages a, .etStageTabs a {
-  color:#00B3FF;
-  text-decoration:none;
 }
 .etWidget, .etResult, .etRequestQuote {
   background-color:#fff;
@@ -12,15 +11,17 @@
   font-size:0.8em;
 }
 .etWidget h1, .etResult h1 {
-  font-size:1.5em;
-  margin:5px 0px;
+  font-size:2em;
+  font-weight:100;
+  margin:5px 0px 10px 0px;
 }
 .etWidget h1 {
   color:#fff;
 }
 .etWidget h2, .etResult h2, .etRequestQuote h2 {
-  font-size:1.3em;
-  margin:5px 0px;
+  font-size:1.5sem;
+  font-weight:100;
+  margin:5px 0px 10px 0px;
 }
 .etWidget select, .etFullWidth, .etRequestQuote select {
   border:1px solid #ccc;
@@ -29,10 +30,39 @@
   border-radius:5px;
   padding:5px 10px;
 }
+.etSubmitButton input, .etSubmitButton button, .etStages a, .etStageTabs a {
+  /* font-size:1.5em; */
+  /* font-weight:bold; */
+  /* padding:3px 10px; */
+      background: #e7252b;
+    background: -moz-linear-gradient(top,#e7252b 50%,#d81518 51%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(50%,#e7252b),color-stop(51%,#d81518));
+    background: -webkit-linear-gradient(top,#e7252b 50%,#d81518 51%);
+    background: -o-linear-gradient(top,#e7252b 50%,#d81518 51%);
+    background: -ms-linear-gradient(top,#e7252b 50%,#d81518 51%);
+    background: linear-gradient(to bottom,#e7252b 50%,#d81518 51%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e7252b', endColorstr='#d81518', GradientType=0);
+    border: 1px solid #d81518;
+    font-weight: 700!important;
+    color: #fff;
+    line-height: 1.33;
+    border-radius: 6px;
+	padding: 3px 5px;
+	text-decoration:none;
+}
 .etSubmitButton input, .etSubmitButton button {
-  font-size:1.5em;
-  font-weight:bold;
-  padding:3px 10px;
+	padding: 10px 16px;
+    text-shadow: 0 -1px #000;
+    font-size: 18px;
+}
+.etStageTabs li {
+	border:0 !important;
+	padding:0px;
+	margin-bottom:10px !important;
+}
+.etStageTabs li.on a {
+	background:#ffffff !important;
+	color:#000 !important;
 }
 .etError {
   background-color:#cc0000;
@@ -44,8 +74,9 @@
 .etError a {
   color:#fff;
 }
-.etResult table tr:nth-child(odd) td, .etRequestQuote table tr:nth-child(odd) td {
-  background-color:#efefef;
+.etResult table tr td {
+  border-bottom:1px solid #ccc;
+  padding:5px;
 }
 .etStage .etStageDesc {
   border-left:3px solid #ccc;
@@ -58,8 +89,56 @@
   box-shadow:0px 5px 15px rgba(0,0,0,.15);
 }
 .etResult table, .etRequestQuote table {
-  border:1px solid #ccc;
+  padding:0px;
 }
 .carDetails {
   font-size:1.2em;
+}
+#etct_MakeName {
+	color:#cc0000 !important;
+	font-weight:700;
+}
+#etct_CustomerNotes {
+	margin-top:0px;
+	font-size:1.2em;
+}
+.etStage thead th {
+	padding-bottom:5px !important;
+}
+.etStage tbody td {
+	font-size:24px;
+	padding-top:20px;
+	padding-bottom:25px;
+}
+.etStage tbody td {
+	font-size:24px;
+	padding-top:20px !important;
+	padding-bottom:25px !important;
+	line-height:20px;
+}
+.etStage tbody td:first-child {
+	background-color:#e8e8e8;
+}
+.etStage tbody td:not(:first-child) {
+	font-weight:bold;
+	background-color:#efefef;
+	color:#cd0000;
+}
+.etct_Small {
+	font-size:12px;
+	color:#555;
+}
+.etct_CustomerNotes {
+	margin-top:0px;
+}
+.etStage tbody td:last-child {
+	font-size:36px;
+	line-height:24px;
+}
+.etSubmitButton {
+	float:right;
+}
+.etServicesHighlight {
+	color:#cd0000;
+	font-weight:700;
 }

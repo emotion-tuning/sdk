@@ -35,6 +35,7 @@
 }
 .etResult table, .etRequestQuote table {
   width:100%;
+  border-collapse: collapse;
 }
 .etStage .etStageDesc {
   margin-left:20px;
@@ -52,6 +53,8 @@
 .etImg {
   margin-right:10px;
   margin-bottom:5px;
+  width:100%;
+  height:auto;
 }
 .carDetails {
   margin-bottom:30px;
@@ -69,9 +72,7 @@
 }
 .etStageTabs li.on {
   border:1px solid #ccc;
-  border-bottom:none;
   background-color:#fff;
-  margin-bottom:-1px;
   position:relative;
   z-index:100;
 }
@@ -132,17 +133,8 @@
   overflow:hidden;
   text-indent:-1000px;
 }
-.etSprite.etAvailable {
-  width:16px;
-  height:16px;
-  background-position:0px -16px;
-  margin:auto;
-}
-.etSprite.etUnavailable {
-  width:16px;
-  height:16px;
-  background-position:0px 0px;
-  margin:auto;
+.etUnavailable {
+  display:none;
 }
 .etSprite.etChart {
   width:16px;
@@ -171,6 +163,9 @@ a:hover .etSprite.etVideo {
 .etStages a .etSprite {
   margin-bottom:-2px;
 }
+.etStages {
+  margin-top:10px;
+}
 .etLayoutHalf {
   width:48%;
   margin:0px 1%;
@@ -186,4 +181,33 @@ a:hover .etSprite.etVideo {
 }
 .clearfix {
   clear:both;
+}
+.etct_LeftCol {
+	width:30%;
+	float:left;
+}
+.etct_RightCol {
+	width:65%;
+	float:right;
+}
+.etFloatLeft {
+	float:left;
+}
+.etCircle {
+	width:90px;
+	height:65px;
+	padding-top:25px;
+	margin:auto;
+	text-align:center;
+	border:3px solid #ccc;
+	background-color:#fff;
+    border-radius:50%;
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    -khtml-border-radius: 50%;
+}
+.etServices img {
+	float:left;
+	margin-right:5px;
+	margin-bottom:5px;
 }
